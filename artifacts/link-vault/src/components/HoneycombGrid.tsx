@@ -165,11 +165,8 @@ export function HoneycombGrid() {
   return (
     <div className="w-full h-full p-8 md:p-12 overflow-auto cyber-scrollbar" id="grid-container">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           {activeCategory.name}
-          <span className="text-sm font-normal text-muted-foreground bg-secondary px-2 py-1 rounded">
-            {links.length} {links.length === 1 ? 'link' : 'links'}
-          </span>
         </h1>
       </div>
 

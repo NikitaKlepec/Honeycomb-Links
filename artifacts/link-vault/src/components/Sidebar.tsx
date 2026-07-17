@@ -107,11 +107,14 @@ export function Sidebar() {
                 className={`group flex items-center justify-between p-3 rounded-md cursor-pointer transition-all ${data.activeCategory === cat.id ? 'bg-primary/10 text-primary border border-primary/30 shadow-[inset_0_0_10px_rgba(99,102,241,0.1)]' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground border border-transparent'}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
-                <div className="flex items-center gap-3">
-                  <span className={`${data.activeCategory === cat.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'} transition-colors`}>
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className={`${data.activeCategory === cat.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'} transition-colors flex-shrink-0`}>
                     {renderIcon(cat.icon)}
                   </span>
-                  <span className="font-medium text-sm">{cat.name}</span>
+                  <span className="font-medium text-sm truncate">{cat.name}</span>
+                  <span className={`ml-auto flex-shrink-0 text-xs px-1.5 py-0.5 rounded font-mono ${data.activeCategory === cat.id ? 'bg-primary/20 text-primary' : 'bg-white/5 text-muted-foreground'}`}>
+                    {cat.links.length}
+                  </span>
                 </div>
                 
                 {isEditMode && (
