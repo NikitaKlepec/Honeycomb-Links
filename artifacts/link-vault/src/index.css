@@ -2,8 +2,6 @@
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -45,65 +43,30 @@
 }
 
 :root {
-  /* Hex to HSL Conversions */
-  /* #0a0a0f */
-  --background: 240 20% 5%;
-  /* #13131a */
-  --card: 240 16% 9%;
-  /* #1a1a24 */
-  --popover: 240 16% 12%;
-  /* #e2e8f0 */
-  --foreground: 215 28% 91%;
-  
-  /* #2a2a3d */
-  --border: 240 18% 20%;
-  --input: 240 18% 20%;
-  
-  /* #6366f1 */
-  --primary: 239 84% 67%;
-  --primary-foreground: 215 28% 91%;
-  
-  --secondary: 240 16% 12%;
-  --secondary-foreground: 215 28% 91%;
-  
-  /* #64748b */
-  --muted: 240 16% 12%;
-  --muted-foreground: 215 16% 47%;
-  
-  /* #6366f1 */
-  --accent: 239 84% 67%;
-  --accent-foreground: 215 28% 91%;
-  
-  /* #ef4444 */
+  --background: 240 33% 97%;
+  --foreground: 240 10% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 15%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 15%;
+  --primary: 263 70% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 20% 96%;
+  --secondary-foreground: 240 10% 30%;
+  --muted: 240 20% 95%;
+  --muted-foreground: 240 10% 50%;
+  --accent: 270 60% 95%;
+  --accent-foreground: 263 70% 40%;
   --destructive: 0 84% 60%;
-  --destructive-foreground: 215 28% 91%;
-  
-  --ring: 239 84% 67%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 20% 90%;
+  --input: 240 20% 94%;
+  --ring: 263 70% 50%;
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 0.5rem;
-}
-
-.dark {
-  --background: 240 20% 5%;
-  --card: 240 16% 9%;
-  --popover: 240 16% 12%;
-  --foreground: 215 28% 91%;
-  --border: 240 18% 20%;
-  --input: 240 18% 20%;
-  --primary: 239 84% 67%;
-  --primary-foreground: 215 28% 91%;
-  --secondary: 240 16% 12%;
-  --secondary-foreground: 215 28% 91%;
-  --muted: 240 16% 12%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 239 84% 67%;
-  --accent-foreground: 215 28% 91%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 215 28% 91%;
-  --ring: 239 84% 67%;
 }
 
 @layer base {
@@ -112,7 +75,10 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased text-foreground;
+    background: linear-gradient(135deg, #f0f0ff 0%, #f8f6ff 40%, #fff 70%, #f0f4ff 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
   }
 }
 
@@ -120,24 +86,39 @@
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 }
 
-.glow-effect {
-  box-shadow: 0 0 20px hsla(239, 84%, 67%, 0.4);
+.glass-panel {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.06), 0 1px 4px rgba(0,0,0,0.04);
 }
 
-.cyber-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.glass-panel-strong {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.cyber-scrollbar::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+.neo-shadow {
+  box-shadow: 6px 6px 16px rgba(124,58,237,0.08), -4px -4px 12px rgba(255,255,255,0.9);
 }
 
-.cyber-scrollbar::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 3px;
+.neo-shadow-inset {
+  box-shadow: inset 3px 3px 8px rgba(124,58,237,0.08), inset -3px -3px 8px rgba(255,255,255,0.9);
 }
 
-.cyber-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
+.glow-accent {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.25), 0 0 60px rgba(124, 58, 237, 0.1);
 }
+
+.glow-accent-subtle {
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
+}
+
+.vault-scrollbar::-webkit-scrollbar { width: 3px; height: 3px; }
+.vault-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.vault-scrollbar::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.25); border-radius: 999px; }
+.vault-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.5); }

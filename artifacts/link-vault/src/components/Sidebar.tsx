@@ -58,29 +58,29 @@ export function Sidebar() {
   };
 
   return (
-    <div className={`w-full md:w-64 bg-card border-r border-border h-auto md:h-full flex flex-col transition-all duration-300 ${isEditMode ? 'border-primary/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : ''}`}>
+    <div className={`w-full md:w-64 glass-panel-strong border-r border-white/60 h-auto md:h-full flex flex-col transition-all duration-300 ${isEditMode ? 'border-primary/50 shadow-[0_0_15px_rgba(124,58,237,0.15)]' : ''}`}>
       <div className="p-6">
-        <h2 className="text-xl font-bold tracking-wider text-primary flex items-center gap-2">
-          <Icons.Hexagon className="w-6 h-6" />
+        <h2 className="text-xl font-[300] tracking-wider text-primary flex items-center gap-2">
+          <Icons.Hexagon className="w-6 h-6 stroke-[1.5px]" />
           VAULT
         </h2>
         {isEditMode && (
-          <div className="mt-2 text-[10px] font-mono tracking-widest text-accent bg-accent/10 px-2 py-1 rounded-sm inline-block border border-accent/20">
+          <div className="mt-2 text-[10px] font-mono tracking-widest text-primary bg-primary/10 px-2 py-1 rounded-sm inline-block border border-primary/20">
             SYSTEM.EDIT_MODE_ACTIVE
           </div>
         )}
       </div>
 
-      <div className="flex-none md:flex-1 overflow-x-auto md:overflow-y-auto cyber-scrollbar px-4 pb-4 flex flex-row md:flex-col gap-2 md:gap-0 md:space-y-2">
+      <div className="flex-none md:flex-1 overflow-x-auto md:overflow-y-auto vault-scrollbar px-4 pb-4 flex flex-row md:flex-col gap-2 md:gap-0 md:space-y-2">
         {data.categories.map((cat) => (
           <div key={cat.id} className="flex-shrink-0 md:flex-shrink">
             {editingId === cat.id ? (
-              <div className="bg-popover p-3 rounded-md border border-primary/30 md:mb-2 space-y-3 min-w-[200px]">
+              <div className="glass-panel p-3 rounded-md border border-primary/30 md:mb-2 space-y-3 min-w-[200px]">
                 <input
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="w-full bg-background border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:border-primary"
+                  className="w-full bg-white/50 border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:border-primary"
                   autoFocus
                 />
                 <div className="flex flex-wrap gap-2">
@@ -90,7 +90,7 @@ export function Sidebar() {
                       <button
                         key={icon}
                         onClick={() => setNewIcon(icon)}
-                        className={`p-1.5 rounded-md border ${newIcon === icon ? 'border-primary bg-primary/20 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}
+                        className={`p-1.5 rounded-md border ${newIcon === icon ? 'border-primary bg-primary/10 text-primary' : 'border-border/50 text-muted-foreground hover:text-foreground'}`}
                       >
                         <IconComp className="w-4 h-4" />
                       </button>
@@ -99,12 +99,12 @@ export function Sidebar() {
                 </div>
                 <div className="flex justify-end gap-2 mt-2">
                   <button onClick={() => setEditingId(null)} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
-                  <button onClick={() => handleUpdate(cat.id)} className="text-xs text-primary hover:text-primary-foreground">Save</button>
+                  <button onClick={() => handleUpdate(cat.id)} className="text-xs text-primary font-medium hover:text-primary/80">Save</button>
                 </div>
               </div>
             ) : (
               <div 
-                className={`group flex items-center justify-between p-3 rounded-md cursor-pointer transition-all ${data.activeCategory === cat.id ? 'bg-primary/10 text-primary border border-primary/30 shadow-[inset_0_0_10px_rgba(99,102,241,0.1)]' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground border border-transparent'}`}
+                className={`group flex items-center justify-between p-3 rounded-md cursor-pointer transition-all ${data.activeCategory === cat.id ? 'glass-panel glow-accent-subtle border border-primary/40 text-primary' : 'text-muted-foreground hover:bg-white/50 hover:text-foreground border border-transparent'}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -113,7 +113,7 @@ export function Sidebar() {
                   </span>
                   <span className="font-medium text-sm truncate">{cat.name}</span>
                 </div>
-                <span className={`flex-shrink-0 text-xs px-1.5 py-0.5 rounded font-mono ${data.activeCategory === cat.id ? 'bg-primary/20 text-primary' : 'bg-white/5 text-muted-foreground'}`}>
+                <span className={`flex-shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full font-mono ${data.activeCategory === cat.id ? 'bg-primary/20 text-primary' : 'bg-black/5 text-muted-foreground'}`}>
                   {cat.links.length}
                 </span>
                 
@@ -147,7 +147,7 @@ export function Sidebar() {
               setNewName('');
               setNewIcon('Folder');
             }}
-            className="w-full mt-4 flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-primary border border-dashed border-border hover:border-primary/50 rounded-md transition-colors"
+            className="w-full mt-4 flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-primary border border-dashed border-primary/30 hover:border-primary/60 hover:glow-accent-subtle rounded-md transition-all glass-panel"
           >
             <FolderPlus className="w-4 h-4" />
             Add Category
@@ -155,13 +155,13 @@ export function Sidebar() {
         )}
 
         {isAdding && (
-          <div className="bg-popover p-3 rounded-md border border-primary/30 mt-4 space-y-3">
+          <div className="glass-panel p-3 rounded-md border border-primary/30 mt-4 space-y-3">
             <input
               type="text"
               placeholder="Category Name"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="w-full bg-background border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:border-primary"
+              className="w-full bg-white/50 border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:border-primary"
               autoFocus
             />
             <div className="flex flex-wrap gap-2">
@@ -171,7 +171,7 @@ export function Sidebar() {
                   <button
                     key={icon}
                     onClick={() => setNewIcon(icon)}
-                    className={`p-1.5 rounded-md border ${newIcon === icon ? 'border-primary bg-primary/20 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}
+                    className={`p-1.5 rounded-md border ${newIcon === icon ? 'border-primary bg-primary/10 text-primary' : 'border-border/50 text-muted-foreground hover:text-foreground'}`}
                   >
                     <IconComp className="w-4 h-4" />
                   </button>
@@ -180,7 +180,7 @@ export function Sidebar() {
             </div>
             <div className="flex justify-end gap-2 mt-2">
               <button onClick={() => setIsAdding(false)} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
-              <button onClick={handleAdd} className="text-xs text-primary hover:text-primary-foreground">Add</button>
+              <button onClick={handleAdd} className="text-xs text-primary font-medium hover:text-primary/80">Add</button>
             </div>
           </div>
         )}

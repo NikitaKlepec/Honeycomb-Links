@@ -33,7 +33,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
     opacity: isDragging && !isOverlay ? 0.3 : 1,
   };
 
-  const color = link.color || '#6366f1';
+  const color = link.color || 'rgba(124, 58, 237, 1)';
   const backgroundUrl = link.imageUrl || (link.url ? `https://www.google.com/s2/favicons?domain=${new URL(link.url).hostname}&sz=128` : null);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -57,39 +57,39 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
       {...listeners}
     >
       <div 
-        className="w-full h-full relative hex-clip bg-card transition-all duration-300 group-hover:scale-105"
+        className="w-full h-full relative hex-clip glass-panel transition-all duration-300 group-hover:scale-105 group-hover:glow-accent"
         onClick={handleClick}
         style={{
-          boxShadow: `inset 0 0 0 2px ${color}`,
+          boxShadow: `inset 0 0 0 1px ${color}40`,
         }}
       >
         {/* Glow effect on hover */}
         <div 
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
           style={{
-            boxShadow: `0 0 20px ${color}80, inset 0 0 15px ${color}40`,
+            boxShadow: `inset 0 0 8px ${color}80`,
             zIndex: 10,
           }}
         />
 
-        {/* Background image (blurred) */}
+        {/* Background image (unblurred, very subtle opacity) */}
         {backgroundUrl && (
           <div 
-            className="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity blur-[2px] group-hover:blur-[1px]"
+            className="absolute inset-0 bg-cover bg-center opacity-15 group-hover:opacity-25 transition-opacity"
             style={{ backgroundImage: `url(${backgroundUrl})` }}
           />
         )}
         
         {/* Border Overlay */}
         <div 
-          className="absolute inset-0 hex-clip pointer-events-none border-2"
-          style={{ borderColor: color, opacity: 0.5 }}
+          className="absolute inset-0 hex-clip pointer-events-none border-2 transition-colors duration-300 group-hover:border-[rgba(124,58,237,0.5)]"
+          style={{ borderColor: `rgba(124,58,237,0.2)` }}
         />
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
-          <h3 className="text-xs font-bold text-white mb-1 line-clamp-1 break-all w-full leading-tight">{link.title}</h3>
-          <p className="text-[9px] text-gray-400 line-clamp-2 leading-tight w-full">{link.description}</p>
+          <h3 className="text-[11px] font-[600] text-foreground mb-1 line-clamp-1 break-all w-full leading-tight">{link.title}</h3>
+          <p className="text-[9px] text-muted-foreground line-clamp-2 leading-tight w-full">{link.description}</p>
         </div>
 
         {/* Edit mode badge */}
@@ -100,7 +100,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
                 e.stopPropagation();
                 onDelete(link.id);
               }}
-              className="p-1 bg-destructive/80 text-white rounded-full hover:bg-destructive shadow-md"
+              className="p-1 bg-destructive/60 backdrop-blur-sm text-white rounded-full hover:bg-destructive shadow-sm"
             >
               <X className="w-3 h-3" />
             </button>
@@ -110,7 +110,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
 
       {/* Tooltip on hover (view mode) */}
       {!isEditMode && !isDragging && (
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-popover text-popover-foreground text-[10px] px-2 py-1 rounded border border-border opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-lg">
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap glass-panel text-foreground text-[10px] px-2 py-1 rounded border border-white/60 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-sm">
           {link.url}
         </div>
       )}
@@ -127,8 +127,8 @@ export function AddHexCard({ onClick, index }: { onClick: () => void, index: num
       transition={{ delay: index * 0.05 }}
       onClick={onClick}
     >
-      <div className="w-full h-full relative hex-clip bg-card/50 border-2 border-dashed border-border flex items-center justify-center transition-all duration-300 group-hover:bg-primary/10 group-hover:border-primary/50 group-hover:scale-105">
-        <Plus className="w-8 h-8 text-muted-foreground group-hover:text-primary transition-colors" />
+      <div className="w-full h-full relative hex-clip glass-panel border-2 border-dashed border-primary/30 flex items-center justify-center transition-all duration-300 group-hover:border-primary/60 group-hover:scale-105 group-hover:glow-accent-subtle">
+        <Plus className="w-8 h-8 text-primary/50 group-hover:text-primary transition-colors" />
       </div>
     </motion.div>
   );

@@ -163,9 +163,9 @@ export function HoneycombGrid() {
   }
 
   return (
-    <div className="w-full h-full p-8 md:p-12 overflow-auto cyber-scrollbar" id="grid-container">
+    <div className="w-full h-full p-8 md:p-12 overflow-auto vault-scrollbar" id="grid-container">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
+        <h1 className="text-[2rem] font-[300] tracking-wide text-foreground mb-2">
           {activeCategory.name}
         </h1>
       </div>
