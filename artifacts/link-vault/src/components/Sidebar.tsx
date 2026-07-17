@@ -58,7 +58,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className={`w-full md:w-64 glass-panel-strong border-r border-white/60 h-auto md:h-full flex flex-col transition-all duration-300 ${isEditMode ? 'border-primary/50 shadow-[0_0_15px_rgba(124,58,237,0.15)]' : ''}`}>
+    <div className={`w-full md:w-64 glass-panel-strong border-r border-violet-200 h-auto md:h-full flex flex-col transition-all duration-300 ${isEditMode ? 'border-primary/50 shadow-[0_0_15px_rgba(124,58,237,0.15)]' : ''}`}>
       <div className="p-6">
         <h2 className="text-xl font-[300] tracking-wider text-primary flex items-center gap-2">
           <Icons.Hexagon className="w-6 h-6 stroke-[1.5px]" />
