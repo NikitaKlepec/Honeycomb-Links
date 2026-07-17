@@ -20,8 +20,9 @@ import { EditModal } from './EditModal';
 
 const HEX_WIDTH = 120;
 const HEX_HEIGHT = 104;
-const X_OFFSET = HEX_WIDTH * 0.75;
-const Y_OFFSET = HEX_HEIGHT;
+const GAP = 10;
+const X_OFFSET = HEX_WIDTH * 0.75 + GAP;
+const Y_OFFSET = HEX_HEIGHT + GAP;
 
 export function HoneycombGrid() {
   const { data, isEditMode, updateLink, deleteLink, addLink, reorderLinks } = useVault();
