@@ -76,7 +76,7 @@
 
   body {
     @apply font-sans antialiased text-foreground;
-    background: linear-gradient(135deg, #f0f0ff 0%, #f8f6ff 40%, #fff 70%, #f0f4ff 100%);
+    background: linear-gradient(135deg, #d8d4f7 0%, #e4e0f9 40%, #ddd9f5 70%, #cfc9f0 100%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -87,19 +87,19 @@
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(220, 215, 245, 0.55);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.06), 0 1px 4px rgba(0,0,0,0.04);
+  border: 1px solid rgba(200, 195, 235, 0.6);
+  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.1), 0 1px 4px rgba(0,0,0,0.06);
 }
 
 .glass-panel-strong {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(225, 220, 248, 0.7);
   backdrop-filter: blur(32px) saturate(200%);
   -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid rgba(200, 195, 235, 0.7);
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.12), 0 2px 8px rgba(0,0,0,0.07);
 }
 
 .neo-shadow {
