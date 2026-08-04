@@ -16,7 +16,7 @@ function VaultApp() {
   return (
     <div className="flex flex-col md:flex-row h-[100dvh] w-full bg-transparent overflow-hidden text-foreground">
       <Sidebar />
-      <div className="flex-1 relative flex flex-col min-h-0" style={{background: 'rgba(215,210,242,0.6)'}}>
+      <div className="flex-1 relative flex flex-col min-h-0" style={{background: '#f4f3ff'}}>
         {/* Top bar */}
         <div className="absolute top-4 right-4 z-40">
           <button
