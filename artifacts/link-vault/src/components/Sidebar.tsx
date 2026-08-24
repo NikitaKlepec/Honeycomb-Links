@@ -58,9 +58,9 @@ export function Sidebar() {
   };
 
   return (
-    <div className={`w-full md:w-64 border-r border-violet-200 h-auto md:h-full flex flex-col transition-all duration-300 ${isEditMode ? 'border-primary/50 shadow-[0_0_15px_rgba(124,58,237,0.15)]' : ''}`} style={{background: '#f9f9ff'}}>
+    <div className={`w-full md:w-64 border-r border-blue-200 h-auto md:h-full flex flex-col transition-all duration-300 ${isEditMode ? 'border-primary/50 shadow-[0_0_15px_rgba(22,79,158,0.15)]' : ''}`} style={{background: '#f9f9ff'}}>
       <div className="p-6">
-        <h2 className="text-xl font-[300] tracking-wider text-primary flex items-center gap-2">
+          <h2 className="text-xl font-[400] tracking-wider text-primary flex items-center gap-2">
           <Icons.Hexagon className="w-6 h-6 stroke-[1.5px]" />
           VAULT
         </h2>
@@ -104,16 +104,16 @@ export function Sidebar() {
               </div>
             ) : (
               <div 
-                className={`group flex items-center justify-between p-3 rounded-md cursor-pointer transition-all ${data.activeCategory === cat.id ? 'glass-panel glow-accent-subtle border border-primary/40 text-primary' : 'text-muted-foreground hover:bg-white/50 hover:text-foreground border border-transparent'}`}
+                 className={`group flex items-center justify-between p-3 rounded-md cursor-pointer transition-all ${data.activeCategory === cat.id ? 'bg-primary text-white border border-primary' : 'text-muted-foreground hover:bg-white hover:text-primary border border-transparent'}`}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <span className={`${data.activeCategory === cat.id ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'} transition-colors flex-shrink-0`}>
+                   <span className={`${data.activeCategory === cat.id ? 'text-white' : 'text-muted-foreground group-hover:text-orange-600'} transition-colors flex-shrink-0`}>
                     {renderIcon(cat.icon)}
                   </span>
                   <span className="font-medium text-sm truncate">{cat.name}</span>
                 </div>
-                <span className={`flex-shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full font-mono ${data.activeCategory === cat.id ? 'bg-primary/20 text-primary' : 'bg-black/5 text-muted-foreground'}`}>
+                 <span className={`flex-shrink-0 text-[10px] font-medium px-2 py-0.5 rounded-full font-mono ${data.activeCategory === cat.id ? 'bg-white/20 text-white' : 'bg-black/5 text-muted-foreground'}`}>
                   {cat.links.length}
                 </span>
                 
@@ -147,7 +147,7 @@ export function Sidebar() {
               setNewName('');
               setNewIcon('Folder');
             }}
-            className="w-full mt-4 flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-primary border border-dashed border-primary/30 hover:border-primary/60 hover:glow-accent-subtle rounded-md transition-all glass-panel"
+             className="w-full mt-4 flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-orange-600 border border-dashed border-primary/40 hover:border-orange-500 hover:glow-accent-subtle rounded-md transition-all"
           >
             <FolderPlus className="w-4 h-4" />
             Add Category

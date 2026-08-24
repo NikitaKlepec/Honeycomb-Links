@@ -43,25 +43,25 @@
 }
 
 :root {
-  --background: 240 33% 97%;
-  --foreground: 240 10% 15%;
+  --background: 60 17% 95%;
+  --foreground: 0 0% 9%;
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 15%;
+  --card-foreground: 0 0% 9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 15%;
-  --primary: 263 70% 50%;
+  --popover-foreground: 0 0% 9%;
+  --primary: 214 75% 35%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 240 20% 96%;
-  --secondary-foreground: 240 10% 30%;
-  --muted: 240 20% 95%;
-  --muted-foreground: 240 10% 50%;
-  --accent: 270 60% 95%;
-  --accent-foreground: 263 70% 40%;
+  --secondary: 60 10% 92%;
+  --secondary-foreground: 0 0% 20%;
+  --muted: 60 8% 91%;
+  --muted-foreground: 0 0% 47%;
+  --accent: 25 90% 94%;
+  --accent-foreground: 20 82% 45%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 240 20% 90%;
-  --input: 240 20% 94%;
-  --ring: 263 70% 50%;
+  --border: 0 0% 84%;
+  --input: 0 0% 92%;
+  --ring: 25 88% 55%;
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
@@ -76,7 +76,7 @@
 
   body {
     @apply font-sans antialiased text-foreground;
-    background: linear-gradient(135deg, #d8d4f7 0%, #e4e0f9 40%, #ddd9f5 70%, #cfc9f0 100%);
+    background: #f5f5f1;
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -87,38 +87,34 @@
 }
 
 .glass-panel {
-  background: rgba(220, 215, 245, 0.55);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(200, 195, 235, 0.6);
-  box-shadow: 0 4px 24px rgba(124, 58, 237, 0.1), 0 1px 4px rgba(0,0,0,0.06);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(22, 79, 158, 0.14);
+  box-shadow: 0 8px 24px rgba(23, 23, 23, 0.06);
 }
 
 .glass-panel-strong {
-  background: rgba(225, 220, 248, 0.7);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid rgba(200, 195, 235, 0.7);
-  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.12), 0 2px 8px rgba(0,0,0,0.07);
+  background: #ffffff;
+  border: 1px solid rgba(22, 79, 158, 0.16);
+  box-shadow: 0 12px 32px rgba(23, 23, 23, 0.08);
 }
 
 .neo-shadow {
-  box-shadow: 6px 6px 16px rgba(124,58,237,0.08), -4px -4px 12px rgba(255,255,255,0.9);
+  box-shadow: 4px 6px 14px rgba(23,23,23,0.08), -4px -4px 12px rgba(255,255,255,0.9);
 }
 
 .neo-shadow-inset {
-  box-shadow: inset 3px 3px 8px rgba(124,58,237,0.08), inset -3px -3px 8px rgba(255,255,255,0.9);
+  box-shadow: inset 2px 2px 6px rgba(23,23,23,0.08), inset -2px -2px 6px rgba(255,255,255,0.9);
 }
 
 .glow-accent {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.25), 0 0 60px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 18px rgba(243, 111, 33, 0.3);
 }
 
 .glow-accent-subtle {
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.15);
+  box-shadow: 0 0 12px rgba(243, 111, 33, 0.18);
 }
 
 .vault-scrollbar::-webkit-scrollbar { width: 3px; height: 3px; }
 .vault-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.vault-scrollbar::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.25); border-radius: 999px; }
-.vault-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.5); }
+.vault-scrollbar::-webkit-scrollbar-thumb { background: rgba(22,79,158,0.3); border-radius: 999px; }
+.vault-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(243,111,33,0.75); }

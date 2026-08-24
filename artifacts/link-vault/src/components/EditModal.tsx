@@ -10,17 +10,12 @@ interface EditModalProps {
 }
 
 const COLORS = [
-  '#6366f1', // Indigo
-  '#ec4899', // Pink
-  '#ef4444', // Red
-  '#f97316', // Orange
-  '#eab308', // Yellow
-  '#22c55e', // Green
-  '#06b6d4', // Cyan
-  '#3b82f6', // Blue
-  '#8b5cf6', // Violet
-  '#a855f7', // Purple
-  '#64748b', // Slate
+  '#164f9e', // Blue
+  '#f36f21', // Orange
+  '#171717', // Black
+  '#777777', // Gray
+  '#8aa9d1', // Soft blue
+  '#f7a875', // Soft orange
   '#ffffff', // White
 ];
 
@@ -30,7 +25,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     url: '',
     description: '',
     imageUrl: '',
-    color: '#7c3aed',
+    color: '#164f9e',
   });
 
   useEffect(() => {
@@ -41,7 +36,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           url: initialData.url || '',
           description: initialData.description || '',
           imageUrl: initialData.imageUrl || '',
-          color: initialData.color || '#7c3aed',
+           color: initialData.color || '#164f9e',
         });
       } else {
         setFormData({
@@ -49,7 +44,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           url: '',
           description: '',
           imageUrl: '',
-          color: '#7c3aed',
+           color: '#164f9e',
         });
       }
     }
@@ -78,7 +73,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 backdrop-blur-sm p-4">
       <div 
         className="w-full max-w-md glass-panel-strong neo-shadow rounded-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200"
-        style={{ boxShadow: `0 0 30px ${formData.color}20, inset 0 0 0 1px ${formData.color}40, 6px 6px 16px rgba(124,58,237,0.08), -4px -4px 12px rgba(255,255,255,0.9)` }}
+         style={{ boxShadow: `0 0 24px ${formData.color}18, inset 0 0 0 1px ${formData.color}35, 6px 6px 16px rgba(23,23,23,0.08), -4px -4px 12px rgba(255,255,255,0.9)` }}
       >
         <div className="px-6 py-4 border-b border-white/60 flex items-center justify-between">
           <h2 className="text-lg font-[300] tracking-wide text-foreground flex items-center gap-2">
@@ -171,8 +166,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
             </button>
             <button
               type="submit"
-              className="px-6 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/90 transition-all glow-accent-subtle hover:glow-accent"
-              style={{ backgroundColor: formData.color }}
+               className="px-6 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-all glow-accent-subtle hover:glow-accent"
+               style={{ backgroundColor: '#f36f21' }}
             >
               Save Link
             </button>
