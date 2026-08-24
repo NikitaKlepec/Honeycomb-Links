@@ -18,8 +18,8 @@ import {
 } from '@dnd-kit/sortable';
 import { EditModal } from './EditModal';
 
-const HEX_WIDTH = 120;
-const HEX_HEIGHT = 104;
+const HEX_WIDTH = 144;
+const HEX_HEIGHT = 125;
 const GAP = 10;
 const X_OFFSET = HEX_WIDTH * 0.75 + GAP;
 const Y_OFFSET = HEX_HEIGHT + GAP;

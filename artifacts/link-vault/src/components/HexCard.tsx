@@ -48,7 +48,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
     <motion.div
       ref={setNodeRef}
       style={style}
-      className={`absolute w-[120px] h-[104px] group ${isEditMode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
+      className={`absolute w-[144px] h-[125px] group ${isEditMode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0, opacity: 0 }}
@@ -121,7 +121,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
 export function AddHexCard({ onClick, index }: { onClick: () => void, index: number }) {
   return (
     <motion.div
-      className="absolute w-[120px] h-[104px] cursor-pointer group z-0"
+      className="absolute w-[144px] h-[125px] cursor-pointer group z-0"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: index * 0.05 }}
