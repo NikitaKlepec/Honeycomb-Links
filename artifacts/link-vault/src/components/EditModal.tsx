@@ -232,7 +232,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
               >
                 {formData.imageUrl ? (
                   <div
-                    className="absolute inset-0 bg-cover bg-center opacity-20"
+                    className="absolute inset-0 bg-cover bg-center opacity-100"
                     style={{
                       backgroundImage: `url(${formData.imageUrl})`,
                       backgroundPosition: `${formData.imagePosition.x}% ${formData.imagePosition.y}%`,
