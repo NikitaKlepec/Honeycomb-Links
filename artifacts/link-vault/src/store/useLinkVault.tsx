@@ -8,6 +8,8 @@ export interface Link {
   url: string;
   imageUrl?: string;
   imagePosition?: { x: number; y: number };
+  titleColor?: string;
+  descriptionColor?: string;
   screenshotUrl?: string;
   color?: string;
   order: number;

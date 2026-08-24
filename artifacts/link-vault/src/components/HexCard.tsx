@@ -93,8 +93,8 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
-          <h3 className="text-[11px] font-[600] text-foreground mb-1 line-clamp-1 break-all w-full leading-tight">{link.title}</h3>
-          <p className="text-[9px] text-muted-foreground line-clamp-2 leading-tight w-full">{link.description}</p>
+          <h3 className="text-[11px] font-[600] mb-1 line-clamp-1 break-all w-full leading-tight" style={{ color: link.titleColor || '#171717' }}>{link.title}</h3>
+          <p className="text-[9px] line-clamp-2 leading-tight w-full" style={{ color: link.descriptionColor || '#777777' }}>{link.description}</p>
         </div>
 
         {/* Edit mode badge */}

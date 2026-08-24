@@ -26,6 +26,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     description: '',
     imageUrl: '',
     imagePosition: { x: 50, y: 50 },
+    titleColor: '#171717',
+    descriptionColor: '#777777',
     color: '#164f9e',
   });
   const [uploadError, setUploadError] = useState('');
@@ -42,6 +44,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           description: initialData.description || '',
           imageUrl: initialData.imageUrl || '',
           imagePosition: initialData.imagePosition || { x: 50, y: 50 },
+          titleColor: initialData.titleColor || '#171717',
+          descriptionColor: initialData.descriptionColor || '#777777',
            color: initialData.color || '#164f9e',
         });
       } else {
@@ -51,6 +55,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           description: '',
           imageUrl: '',
           imagePosition: { x: 50, y: 50 },
+          titleColor: '#171717',
+          descriptionColor: '#777777',
            color: '#164f9e',
         });
       }
@@ -265,6 +271,35 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                 </button>
               </div>
             )}
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Text Colors</label>
+            <div className="grid grid-cols-2 gap-4">
+              {([
+                ['Title color', 'titleColor'],
+                ['Description color', 'descriptionColor'],
+              ] as const).map(([label, field]) => (
+                <div key={field} className="space-y-2">
+                  <span className="text-[10px] text-muted-foreground">{label}</span>
+                  <div className="flex flex-wrap gap-2">
+                    {COLORS.map((c) => (
+                      <button
+                        key={`${field}-${c}`}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, [field]: c }))}
+                        className="h-5 w-5 rounded-full border border-white/70 transition-transform hover:scale-110"
+                        style={{
+                          backgroundColor: c,
+                          boxShadow: formData[field] === c ? `0 0 0 2px #f5f5f1, 0 0 0 3px #f36f21` : 'none',
+                        }}
+                        aria-label={`${label}: ${c}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-2 pt-2">
