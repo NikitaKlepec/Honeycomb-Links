@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Globe } from 'lucide-react';
+import { X, Globe, Upload, Image as ImageIcon } from 'lucide-react';
 import { Link } from '../store/useLinkVault';
 
 interface EditModalProps {
@@ -27,9 +27,11 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     imageUrl: '',
     color: '#164f9e',
   });
+  const [uploadError, setUploadError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
+      setUploadError('');
       if (initialData) {
         setFormData({
           title: initialData.title || '',
@@ -67,6 +69,32 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
         // invalid url, ignore
       }
     }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please choose an image file.');
+      return;
+    }
+
+    if (file.size > 4 * 1024 * 1024) {
+      setUploadError('Image must be smaller than 4 MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setFormData(prev => ({ ...prev, imageUrl: reader.result as string }));
+        setUploadError('');
+      }
+    };
+    reader.onerror = () => setUploadError('Could not read this image.');
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -126,7 +154,29 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Custom Image URL (optional)</label>
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Card Background</label>
+            <div className="flex items-center gap-3">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-primary/30 px-3 py-2 text-xs font-medium text-primary transition-colors hover:border-orange-500 hover:text-orange-600">
+                <Upload className="w-4 h-4" />
+                Upload from computer
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="sr-only"
+                />
+              </label>
+              {formData.imageUrl && (
+                <div className="h-10 w-10 overflow-hidden rounded-md border border-primary/20 bg-white" aria-label="Selected image preview">
+                  <img src={formData.imageUrl} alt="" className="h-full w-full object-cover" />
+                </div>
+              )}
+            </div>
+            {uploadError && <p className="text-[10px] text-destructive">{uploadError}</p>}
+            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground/70">
+              <ImageIcon className="h-3 w-3" />
+              Or paste an image URL below.
+            </div>
             <input
               type="url"
               value={formData.imageUrl}
@@ -134,7 +184,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
               placeholder="https://..."
               className="w-full bg-white/50 neo-shadow-inset rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all border-none"
             />
-            <p className="text-[10px] text-muted-foreground/70">Overrides the auto-generated favicon background.</p>
+            <p className="text-[10px] text-muted-foreground/70">The uploaded image or URL overrides the auto-generated favicon.</p>
           </div>
 
           <div className="space-y-2 pt-2">
