@@ -179,6 +179,24 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
               placeholder="My Awesome Site"
               className="w-full bg-white/50 neo-shadow-inset rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all border-none"
             />
+           <div className="flex items-center justify-between gap-3 pt-1">
+             <span className="text-[10px] text-muted-foreground">Title color</span>
+             <div className="flex flex-wrap justify-end gap-2">
+               {COLORS.map((c) => (
+                 <button
+                   key={`title-${c}`}
+                   type="button"
+                   onClick={() => setFormData(prev => ({ ...prev, titleColor: c }))}
+                   className="h-5 w-5 rounded-full border border-white/70 transition-transform hover:scale-110"
+                   style={{
+                     backgroundColor: c,
+                     boxShadow: formData.titleColor === c ? `0 0 0 2px #f5f5f1, 0 0 0 3px #f36f21` : 'none',
+                   }}
+                   aria-label={`Title color: ${c}`}
+                 />
+               ))}
+             </div>
+           </div>
           </div>
 
           <div className="space-y-2">
@@ -190,6 +208,24 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
               rows={3}
               className="w-full bg-white/50 neo-shadow-inset rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all resize-none border-none"
             />
+           <div className="flex items-center justify-between gap-3 pt-1">
+             <span className="text-[10px] text-muted-foreground">Description color</span>
+             <div className="flex flex-wrap justify-end gap-2">
+               {COLORS.map((c) => (
+                 <button
+                   key={`description-${c}`}
+                   type="button"
+                   onClick={() => setFormData(prev => ({ ...prev, descriptionColor: c }))}
+                   className="h-5 w-5 rounded-full border border-white/70 transition-transform hover:scale-110"
+                   style={{
+                     backgroundColor: c,
+                     boxShadow: formData.descriptionColor === c ? `0 0 0 2px #f5f5f1, 0 0 0 3px #f36f21` : 'none',
+                   }}
+                   aria-label={`Description color: ${c}`}
+                 />
+               ))}
+             </div>
+           </div>
           </div>
 
           <div className="space-y-2">
@@ -271,35 +307,6 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                 </button>
               </div>
             )}
-          </div>
-
-          <div className="space-y-2 pt-2">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Text Colors</label>
-            <div className="grid grid-cols-2 gap-4">
-              {([
-                ['Title color', 'titleColor'],
-                ['Description color', 'descriptionColor'],
-              ] as const).map(([label, field]) => (
-                <div key={field} className="space-y-2">
-                  <span className="text-[10px] text-muted-foreground">{label}</span>
-                  <div className="flex flex-wrap gap-2">
-                    {COLORS.map((c) => (
-                      <button
-                        key={`${field}-${c}`}
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, [field]: c }))}
-                        className="h-5 w-5 rounded-full border border-white/70 transition-transform hover:scale-110"
-                        style={{
-                          backgroundColor: c,
-                          boxShadow: formData[field] === c ? `0 0 0 2px #f5f5f1, 0 0 0 3px #f36f21` : 'none',
-                        }}
-                        aria-label={`${label}: ${c}`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
 
           <div className="space-y-2 pt-2">
