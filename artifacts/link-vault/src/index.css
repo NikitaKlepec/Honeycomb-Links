@@ -118,3 +118,14 @@
 .vault-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .vault-scrollbar::-webkit-scrollbar-thumb { background: rgba(22,79,158,0.3); border-radius: 999px; }
 .vault-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(243,111,33,0.75); }
+
+.modal-scroll-left {
+  direction: rtl;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22, 79, 158, 0.3) transparent;
+}
+
+.modal-scroll-left > * {
+  direction: ltr;
+}

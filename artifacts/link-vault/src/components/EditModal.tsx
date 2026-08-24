@@ -137,9 +137,9 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-white/20 p-4 backdrop-blur-sm md:items-center">
       <div 
-        className="w-full max-w-md glass-panel-strong neo-shadow rounded-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="flex max-h-[calc(100dvh-2rem)] w-full max-w-md flex-col overflow-hidden rounded-lg glass-panel-strong neo-shadow animate-in fade-in zoom-in-95 duration-200"
          style={{ boxShadow: `0 0 24px ${formData.color}18, inset 0 0 0 1px ${formData.color}35, 6px 6px 16px rgba(23,23,23,0.08), -4px -4px 12px rgba(255,255,255,0.9)` }}
       >
         <div className="px-6 py-4 border-b border-white/60 flex items-center justify-between">
@@ -155,7 +155,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="modal-scroll-left min-h-0 space-y-4 p-6">
           <div className="space-y-2">
             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">URL *</label>
             <input
