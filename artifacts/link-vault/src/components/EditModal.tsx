@@ -286,10 +286,10 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                   </div>
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                  <span className="text-[11px] font-semibold text-foreground">
+                  <span className="text-[11px] font-semibold" style={{ color: formData.titleColor }}>
                     {formData.title || 'Link title'}
                   </span>
-                  <span className="mt-1 line-clamp-2 text-[9px] leading-tight text-muted-foreground">
+                  <span className="mt-1 line-clamp-2 text-[9px] leading-tight" style={{ color: formData.descriptionColor }}>
                     {formData.description || 'Your description will appear here'}
                   </span>
                 </div>
