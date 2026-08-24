@@ -187,6 +187,32 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
             <p className="text-[10px] text-muted-foreground/70">The uploaded image or URL overrides the auto-generated favicon.</p>
           </div>
 
+          <div className="space-y-2 pt-1">
+            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Background Preview</label>
+            <div className="flex min-h-[174px] items-center justify-center rounded-md border border-border/70 bg-[#f5f5f1] p-3">
+              <div className="relative h-[150px] w-[173px] overflow-hidden hex-clip border-2 border-primary/30 bg-white shadow-sm">
+                {formData.imageUrl ? (
+                  <div
+                    className="absolute inset-0 bg-cover bg-center opacity-20"
+                    style={{ backgroundImage: `url(${formData.imageUrl})` }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground">
+                    No background selected
+                  </div>
+                )}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                  <span className="text-[11px] font-semibold text-foreground">
+                    {formData.title || 'Link title'}
+                  </span>
+                  <span className="mt-1 line-clamp-2 text-[9px] leading-tight text-muted-foreground">
+                    {formData.description || 'Your description will appear here'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-2 pt-2">
             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Accent Color</label>
             <div className="flex flex-wrap gap-2 pt-1">
