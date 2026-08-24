@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Globe, Upload, Image as ImageIcon } from 'lucide-react';
 import { Link } from '../store/useLinkVault';
 
@@ -25,9 +25,12 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     url: '',
     description: '',
     imageUrl: '',
+    imagePosition: { x: 50, y: 50 },
     color: '#164f9e',
   });
   const [uploadError, setUploadError] = useState('');
+  const [isPositioning, setIsPositioning] = useState(false);
+  const dragState = useRef<{ clientX: number; clientY: number; x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -38,6 +41,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           url: initialData.url || '',
           description: initialData.description || '',
           imageUrl: initialData.imageUrl || '',
+          imagePosition: initialData.imagePosition || { x: 50, y: 50 },
            color: initialData.color || '#164f9e',
         });
       } else {
@@ -46,6 +50,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           url: '',
           description: '',
           imageUrl: '',
+          imagePosition: { x: 50, y: 50 },
            color: '#164f9e',
         });
       }
@@ -89,12 +94,40 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === 'string') {
-        setFormData(prev => ({ ...prev, imageUrl: reader.result as string }));
+        setFormData(prev => ({ ...prev, imageUrl: reader.result as string, imagePosition: { x: 50, y: 50 } }));
         setUploadError('');
       }
     };
     reader.onerror = () => setUploadError('Could not read this image.');
     reader.readAsDataURL(file);
+  };
+
+  const handlePreviewPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!formData.imageUrl) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragState.current = {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      x: formData.imagePosition.x,
+      y: formData.imagePosition.y,
+    };
+    setIsPositioning(true);
+  };
+
+  const handlePreviewPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragState.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const nextX = Math.max(0, Math.min(100, dragState.current.x + ((e.clientX - dragState.current.clientX) / rect.width) * 100));
+    const nextY = Math.max(0, Math.min(100, dragState.current.y + ((e.clientY - dragState.current.clientY) / rect.height) * 100));
+    setFormData(prev => ({ ...prev, imagePosition: { x: nextX, y: nextY } }));
+  };
+
+  const handlePreviewPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragState.current) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    dragState.current = null;
+    setIsPositioning(false);
   };
 
   return (
@@ -190,11 +223,20 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           <div className="space-y-2 pt-1">
             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Background Preview</label>
             <div className="flex min-h-[174px] items-center justify-center rounded-md border border-border/70 bg-[#f5f5f1] p-3">
-              <div className="relative h-[150px] w-[173px] overflow-hidden hex-clip border-2 border-primary/30 bg-white shadow-sm">
+              <div
+                className={`relative h-[150px] w-[173px] overflow-hidden hex-clip border-2 border-primary/30 bg-white shadow-sm ${formData.imageUrl ? (isPositioning ? 'cursor-grabbing' : 'cursor-grab') : ''}`}
+                onPointerDown={handlePreviewPointerDown}
+                onPointerMove={handlePreviewPointerMove}
+                onPointerUp={handlePreviewPointerUp}
+                onPointerCancel={handlePreviewPointerUp}
+              >
                 {formData.imageUrl ? (
                   <div
                     className="absolute inset-0 bg-cover bg-center opacity-20"
-                    style={{ backgroundImage: `url(${formData.imageUrl})` }}
+                    style={{
+                      backgroundImage: `url(${formData.imageUrl})`,
+                      backgroundPosition: `${formData.imagePosition.x}% ${formData.imagePosition.y}%`,
+                    }}
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground">
@@ -211,6 +253,18 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                 </div>
               </div>
             </div>
+            {formData.imageUrl && (
+              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                <span>Drag the image to reposition it</span>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, imagePosition: { x: 50, y: 50 } }))}
+                  className="text-primary hover:text-orange-600 transition-colors"
+                >
+                  Center image
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2 pt-2">

@@ -7,6 +7,7 @@ export interface Link {
   description: string;
   url: string;
   imageUrl?: string;
+  imagePosition?: { x: number; y: number };
   screenshotUrl?: string;
   color?: string;
   order: number;
