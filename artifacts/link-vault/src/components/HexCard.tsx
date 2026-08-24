@@ -75,7 +75,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
         {/* Background image (unblurred, very subtle opacity) */}
         {backgroundUrl && (
           <div 
-            className="absolute inset-0 bg-cover bg-center opacity-15 group-hover:opacity-25 transition-opacity"
+            className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-20 transition-opacity"
             style={{ backgroundImage: `url(${backgroundUrl})` }}
           />
         )}
