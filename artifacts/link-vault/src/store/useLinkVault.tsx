@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { SEED_DATA } from '../data/seed';
+import { loadVaultFromSupabase, syncVaultToSupabase } from '../lib/linkVaultPersistence';
+import { isSupabaseConfigured, supabaseConfigError } from '../lib/supabase';
 
 export interface Link {
   id: string;
@@ -40,27 +42,121 @@ export interface LinkVaultData {
 
 const STORAGE_KEY = 'link-vault-data';
 
-export function useLinkVaultHook() {
-  const [data, setData] = useState<LinkVaultData>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        return JSON.parse(stored);
-      } catch (e) {
-        console.error('Failed to parse localStorage data', e);
-      }
-    }
-    return {
-      categories: SEED_DATA,
-      activeCategory: SEED_DATA[0].id,
-    };
-  });
+function cloneData(data: LinkVaultData): LinkVaultData {
+  return JSON.parse(JSON.stringify(data)) as LinkVaultData;
+}
 
+function readLegacyData(): LinkVaultData | null {
+  if (typeof window === 'undefined') return null;
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  if (!stored) return null;
+
+  try {
+    return JSON.parse(stored) as LinkVaultData;
+  } catch (error) {
+    console.error('Failed to parse legacy localStorage data', error);
+    return null;
+  }
+}
+
+function getInitialData() {
+  return readLegacyData() ?? cloneData({
+    categories: SEED_DATA,
+    activeCategory: SEED_DATA[0]?.id ?? '',
+  });
+}
+
+function getPersistenceErrorMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  if (message.includes('Could not find the table')) {
+    return 'Supabase is connected, but the Link Vault tables are missing. Run artifacts/link-vault/supabase/schema.sql in the Supabase SQL Editor.';
+  }
+  return `Supabase storage error: ${message}`;
+}
+
+export function useLinkVaultHook() {
+  const [data, setData] = useState<LinkVaultData>(getInitialData);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [persistenceError, setPersistenceError] = useState<string | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const legacyMigrationPendingRef = useRef(false);
+  const syncQueueRef = useRef(Promise.resolve());
+  const syncRevisionRef = useRef(0);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }, [data]);
+    let cancelled = false;
+
+    async function hydrate() {
+      if (!isSupabaseConfigured) {
+        setPersistenceError(supabaseConfigError);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const remoteData = await loadVaultFromSupabase();
+        if (cancelled) return;
+
+        if (remoteData.categories.length === 0) {
+          const legacyData = readLegacyData();
+          const sourceData = legacyData ?? getInitialData();
+          legacyMigrationPendingRef.current = Boolean(legacyData);
+          setData(sourceData);
+        } else {
+          setData(remoteData);
+        }
+
+        setPersistenceError(null);
+        setIsHydrated(true);
+      } catch (error) {
+        if (cancelled) return;
+        setPersistenceError(getPersistenceErrorMessage(error));
+        setIsLoading(false);
+      }
+    }
+
+    void hydrate().finally(() => {
+      if (!cancelled) setIsLoading(false);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated || !isSupabaseConfigured) return;
+
+    const revision = ++syncRevisionRef.current;
+    setIsSaving(true);
+    const snapshot = cloneData(data);
+    const migrationPending = legacyMigrationPendingRef.current;
+
+    const operation = syncQueueRef.current
+      .catch(() => undefined)
+      .then(() => syncVaultToSupabase(snapshot))
+      .then(() => {
+        if (migrationPending && typeof window !== 'undefined') {
+          window.localStorage.removeItem(STORAGE_KEY);
+          legacyMigrationPendingRef.current = false;
+        }
+        if (syncRevisionRef.current === revision) {
+          setPersistenceError(null);
+        }
+      })
+      .catch((error) => {
+        if (syncRevisionRef.current === revision) {
+          setPersistenceError(getPersistenceErrorMessage(error));
+        }
+      })
+      .finally(() => {
+        if (syncRevisionRef.current === revision) setIsSaving(false);
+      });
+
+    syncQueueRef.current = operation.then(() => undefined, () => undefined);
+  }, [data, isHydrated]);
 
   const setActiveCategory = useCallback((id: string) => {
     setData((prev) => ({ ...prev, activeCategory: id }));
@@ -182,6 +278,9 @@ export function useLinkVaultHook() {
   return {
     data,
     isEditMode,
+    isLoading,
+    isSaving,
+    persistenceError,
     toggleEditMode,
     setActiveCategory,
     addCategory,

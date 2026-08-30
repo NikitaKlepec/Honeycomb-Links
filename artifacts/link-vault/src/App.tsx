@@ -11,12 +11,32 @@ import { useEffect } from 'react';
 const queryClient = new QueryClient();
 
 function VaultApp() {
-  const { isEditMode, toggleEditMode } = useVault();
+  const { isEditMode, isLoading, isSaving, persistenceError, toggleEditMode } = useVault();
 
   return (
     <div className="flex flex-col md:flex-row h-[100dvh] w-full bg-transparent overflow-hidden text-foreground">
       <Sidebar />
       <div className="flex-1 relative flex flex-col min-h-0" style={{background: '#f5f5f1'}}>
+        <div className="absolute top-20 left-4 z-40 max-w-[min(28rem,calc(100%-6rem))] space-y-2">
+          {isLoading && (
+            <div className="rounded-md bg-white/85 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-sm">
+              Loading vault…
+            </div>
+          )}
+          {persistenceError && (
+            <div
+              role="alert"
+              className="rounded-md border border-orange-200 bg-orange-50/95 px-3 py-2 text-xs leading-relaxed text-orange-900 shadow-sm backdrop-blur-sm"
+            >
+              {persistenceError}
+            </div>
+          )}
+          {isSaving && !persistenceError && (
+            <div className="rounded-md bg-white/85 px-3 py-2 text-xs text-muted-foreground shadow-sm backdrop-blur-sm">
+              Saving…
+            </div>
+          )}
+        </div>
         {/* Top bar */}
         <div className="absolute top-4 right-4 z-40">
           <button
