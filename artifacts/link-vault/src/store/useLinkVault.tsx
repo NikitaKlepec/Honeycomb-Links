@@ -10,6 +10,8 @@ export interface Link {
   imagePosition?: { x: number; y: number };
   titleColor?: string;
   descriptionColor?: string;
+  titleFontSize?: number;
+  descriptionFontSize?: number;
   screenshotUrl?: string;
   color?: string;
   order: number;

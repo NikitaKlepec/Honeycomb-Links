@@ -28,6 +28,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     imagePosition: { x: 50, y: 50 },
     titleColor: '#171717',
     descriptionColor: '#777777',
+    titleFontSize: 11,
+    descriptionFontSize: 9,
     color: '#164f9e',
   });
   const [uploadError, setUploadError] = useState('');
@@ -46,6 +48,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           imagePosition: initialData.imagePosition || { x: 50, y: 50 },
           titleColor: initialData.titleColor || '#171717',
           descriptionColor: initialData.descriptionColor || '#777777',
+          titleFontSize: initialData.titleFontSize || 11,
+          descriptionFontSize: initialData.descriptionFontSize || 9,
            color: initialData.color || '#164f9e',
         });
       } else {
@@ -57,6 +61,8 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           imagePosition: { x: 50, y: 50 },
           titleColor: '#171717',
           descriptionColor: '#777777',
+          titleFontSize: 11,
+          descriptionFontSize: 9,
            color: '#164f9e',
         });
       }
@@ -197,6 +203,20 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                ))}
              </div>
            </div>
+           <div className="flex items-center gap-3 pt-1">
+             <span className="min-w-[68px] text-[10px] text-muted-foreground">Font size</span>
+             <input
+               type="range"
+               min="8"
+               max="24"
+               step="1"
+               value={formData.titleFontSize}
+               onChange={(e) => setFormData(prev => ({ ...prev, titleFontSize: Number(e.target.value) }))}
+               className="h-1 flex-1 accent-orange-500"
+               aria-label="Title font size"
+             />
+             <span className="w-8 text-right text-[10px] text-muted-foreground">{formData.titleFontSize}px</span>
+           </div>
           </div>
 
           <div className="space-y-2">
@@ -225,6 +245,20 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                  />
                ))}
              </div>
+           </div>
+           <div className="flex items-center gap-3 pt-1">
+             <span className="min-w-[68px] text-[10px] text-muted-foreground">Font size</span>
+             <input
+               type="range"
+               min="7"
+               max="16"
+               step="1"
+               value={formData.descriptionFontSize}
+               onChange={(e) => setFormData(prev => ({ ...prev, descriptionFontSize: Number(e.target.value) }))}
+               className="h-1 flex-1 accent-orange-500"
+               aria-label="Description font size"
+             />
+             <span className="w-8 text-right text-[10px] text-muted-foreground">{formData.descriptionFontSize}px</span>
            </div>
           </div>
 
@@ -286,10 +320,10 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                   </div>
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                  <span className="text-[11px] font-semibold" style={{ color: formData.titleColor }}>
+                  <span className="font-semibold" style={{ color: formData.titleColor, fontSize: `${formData.titleFontSize}px` }}>
                     {formData.title || 'Link title'}
                   </span>
-                  <span className="mt-1 line-clamp-2 text-[9px] leading-tight" style={{ color: formData.descriptionColor }}>
+                  <span className="mt-1 line-clamp-2 leading-tight" style={{ color: formData.descriptionColor, fontSize: `${formData.descriptionFontSize}px` }}>
                     {formData.description || 'Your description will appear here'}
                   </span>
                 </div>
