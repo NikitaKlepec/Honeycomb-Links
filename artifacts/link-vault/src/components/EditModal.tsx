@@ -317,7 +317,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Background Preview</label>
             <div className="flex min-h-[174px] items-center justify-center rounded-md border border-border/70 bg-[#f5f5f1] p-3">
               <div
-                 className={`relative h-[173px] w-[150px] overflow-hidden hex-clip border-2 border-primary/30 bg-white shadow-sm ${formData.imageUrl ? (isPositioning ? 'cursor-grabbing' : 'cursor-grab') : ''}`}
+                 className={`relative h-[173px] w-[150px] overflow-hidden hex-clip bg-white shadow-sm ${formData.imageUrl ? (isPositioning ? 'cursor-grabbing' : 'cursor-grab') : ''}`}
                 onPointerDown={handlePreviewPointerDown}
                 onPointerMove={handlePreviewPointerMove}
                 onPointerUp={handlePreviewPointerUp}

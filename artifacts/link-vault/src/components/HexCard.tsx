@@ -57,21 +57,9 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
       {...listeners}
     >
       <div 
-        className="w-full h-full relative hex-clip glass-panel transition-all duration-300 group-hover:scale-105 group-hover:glow-accent"
+        className="w-full h-full relative hex-clip bg-white/70 shadow-sm transition-all duration-300 group-hover:scale-105"
         onClick={handleClick}
-        style={{
-           boxShadow: `inset 0 0 0 1px rgba(22,79,158,0.2)`,
-        }}
       >
-        {/* Glow effect on hover */}
-        <div 
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-          style={{
-             boxShadow: `inset 0 0 8px rgba(243,111,33,0.45)`,
-            zIndex: 10,
-          }}
-        />
-
         {/* Background image (unblurred, very subtle opacity) */}
         {backgroundUrl && (
           <div 
@@ -86,12 +74,6 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
           />
         )}
         
-        {/* Border Overlay */}
-        <div 
-           className="absolute inset-0 hex-clip pointer-events-none border-2 transition-colors duration-300 group-hover:border-orange-500"
-           style={{ borderColor: `rgba(22,79,158,0.28)` }}
-        />
-
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
           <h3 className="font-[600] mb-1 line-clamp-1 break-all w-full leading-tight" style={{ color: link.titleColor || '#171717', fontSize: `${link.titleFontSize || 11}px` }}>{link.title}</h3>
@@ -133,7 +115,7 @@ export function AddHexCard({ onClick, index }: { onClick: () => void, index: num
       transition={{ delay: index * 0.05 }}
       onClick={onClick}
     >
-      <div className="w-full h-full relative hex-clip glass-panel border-2 border-dashed border-primary/30 flex items-center justify-center transition-all duration-300 group-hover:border-primary/60 group-hover:scale-105 group-hover:glow-accent-subtle">
+      <div className="w-full h-full relative hex-clip bg-white/70 shadow-sm flex items-center justify-center transition-all duration-300 group-hover:scale-105">
          <Plus className="w-8 h-8 text-primary/50 group-hover:text-orange-500 transition-colors" />
       </div>
     </motion.div>
