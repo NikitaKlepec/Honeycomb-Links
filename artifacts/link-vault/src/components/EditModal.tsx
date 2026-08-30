@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Globe, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Globe, Upload, Image as ImageIcon, Bold, Italic, Underline } from 'lucide-react';
 import { Link } from '../store/useLinkVault';
 
 interface EditModalProps {
@@ -19,6 +19,84 @@ const COLORS = [
   '#ffffff', // White
 ];
 
+const FONT_FAMILIES = [
+  { value: 'Inter, sans-serif', label: 'Inter' },
+  { value: 'Arial, sans-serif', label: 'Arial' },
+  { value: 'Georgia, serif', label: 'Georgia' },
+  { value: 'Verdana, sans-serif', label: 'Verdana' },
+  { value: '"Trebuchet MS", sans-serif', label: 'Trebuchet MS' },
+  { value: 'Menlo, monospace', label: 'Monospace' },
+];
+
+function TextStyleControls({
+  fontFamily,
+  bold,
+  italic,
+  underline,
+  onChange,
+}: {
+  fontFamily: string;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  onChange: (updates: { fontFamily?: string; bold?: boolean; italic?: boolean; underline?: boolean }) => void;
+}) {
+  const toggleClass = (active: boolean) =>
+    `inline-flex h-7 w-7 items-center justify-center rounded border transition-colors ${
+      active
+        ? 'border-primary bg-primary text-primary-foreground'
+        : 'border-border/70 bg-white/50 text-muted-foreground hover:border-primary/50 hover:text-foreground'
+    }`;
+
+  return (
+    <div className="flex items-center gap-2 pt-1">
+      <span className="min-w-[68px] text-[10px] text-muted-foreground">Text style</span>
+      <select
+        value={fontFamily}
+        onChange={(e) => onChange({ fontFamily: e.target.value })}
+        className="min-w-0 flex-1 rounded-md border-none bg-white/50 px-2 py-1.5 text-xs text-foreground neo-shadow-inset focus:outline-none focus:ring-1 focus:ring-primary"
+        aria-label="Font family"
+      >
+        {FONT_FAMILIES.map((font) => (
+          <option key={font.value} value={font.value}>{font.label}</option>
+        ))}
+      </select>
+      <div className="flex shrink-0 gap-1">
+        <button
+          type="button"
+          className={toggleClass(bold)}
+          onClick={() => onChange({ bold: !bold })}
+          aria-label="Bold"
+          aria-pressed={bold}
+          title="Bold"
+        >
+          <Bold className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
+          className={toggleClass(italic)}
+          onClick={() => onChange({ italic: !italic })}
+          aria-label="Italic"
+          aria-pressed={italic}
+          title="Italic"
+        >
+          <Italic className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
+          className={toggleClass(underline)}
+          onClick={() => onChange({ underline: !underline })}
+          aria-label="Underline"
+          aria-pressed={underline}
+          title="Underline"
+        >
+          <Underline className="h-3.5 w-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalProps) {
   const [formData, setFormData] = useState({
     title: '',
@@ -31,6 +109,14 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     descriptionColor: '#777777',
     titleFontSize: 11,
     descriptionFontSize: 9,
+    titleFontFamily: 'Inter, sans-serif',
+    descriptionFontFamily: 'Inter, sans-serif',
+    titleBold: true,
+    titleItalic: false,
+    titleUnderline: false,
+    descriptionBold: false,
+    descriptionItalic: false,
+    descriptionUnderline: false,
     color: '#164f9e',
   });
   const [uploadError, setUploadError] = useState('');
@@ -52,6 +138,14 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           descriptionColor: initialData.descriptionColor || '#777777',
           titleFontSize: initialData.titleFontSize || 11,
           descriptionFontSize: initialData.descriptionFontSize || 9,
+          titleFontFamily: initialData.titleFontFamily || 'Inter, sans-serif',
+          descriptionFontFamily: initialData.descriptionFontFamily || 'Inter, sans-serif',
+          titleBold: initialData.titleBold ?? true,
+          titleItalic: initialData.titleItalic ?? false,
+          titleUnderline: initialData.titleUnderline ?? false,
+          descriptionBold: initialData.descriptionBold ?? false,
+          descriptionItalic: initialData.descriptionItalic ?? false,
+          descriptionUnderline: initialData.descriptionUnderline ?? false,
            color: initialData.color || '#164f9e',
         });
       } else {
@@ -66,6 +160,14 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           descriptionColor: '#777777',
           titleFontSize: 11,
           descriptionFontSize: 9,
+          titleFontFamily: 'Inter, sans-serif',
+          descriptionFontFamily: 'Inter, sans-serif',
+          titleBold: true,
+          titleItalic: false,
+          titleUnderline: false,
+          descriptionBold: false,
+          descriptionItalic: false,
+          descriptionUnderline: false,
            color: '#164f9e',
         });
       }
@@ -206,6 +308,19 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                ))}
              </div>
            </div>
+            <TextStyleControls
+              fontFamily={formData.titleFontFamily}
+              bold={formData.titleBold}
+              italic={formData.titleItalic}
+              underline={formData.titleUnderline}
+              onChange={(updates) => setFormData(prev => ({
+                ...prev,
+                ...(updates.fontFamily !== undefined ? { titleFontFamily: updates.fontFamily } : {}),
+                ...(updates.bold !== undefined ? { titleBold: updates.bold } : {}),
+                ...(updates.italic !== undefined ? { titleItalic: updates.italic } : {}),
+                ...(updates.underline !== undefined ? { titleUnderline: updates.underline } : {}),
+              }))}
+            />
            <div className="flex items-center gap-3 pt-1">
              <span className="min-w-[68px] text-[10px] text-muted-foreground">Font size</span>
              <input
@@ -249,6 +364,19 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                ))}
              </div>
            </div>
+            <TextStyleControls
+              fontFamily={formData.descriptionFontFamily}
+              bold={formData.descriptionBold}
+              italic={formData.descriptionItalic}
+              underline={formData.descriptionUnderline}
+              onChange={(updates) => setFormData(prev => ({
+                ...prev,
+                ...(updates.fontFamily !== undefined ? { descriptionFontFamily: updates.fontFamily } : {}),
+                ...(updates.bold !== undefined ? { descriptionBold: updates.bold } : {}),
+                ...(updates.italic !== undefined ? { descriptionItalic: updates.italic } : {}),
+                ...(updates.underline !== undefined ? { descriptionUnderline: updates.underline } : {}),
+              }))}
+            />
            <div className="flex items-center gap-3 pt-1">
              <span className="min-w-[68px] text-[10px] text-muted-foreground">Font size</span>
              <input
@@ -338,10 +466,29 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                   </div>
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                  <span className="font-semibold" style={{ color: formData.titleColor, fontSize: `${formData.titleFontSize}px` }}>
+                  <span
+                    style={{
+                      color: formData.titleColor,
+                      fontSize: `${formData.titleFontSize}px`,
+                      fontFamily: formData.titleFontFamily,
+                      fontWeight: formData.titleBold ? 700 : 400,
+                      fontStyle: formData.titleItalic ? 'italic' : 'normal',
+                      textDecoration: formData.titleUnderline ? 'underline' : 'none',
+                    }}
+                  >
                     {formData.title || 'Link title'}
                   </span>
-                  <span className="mt-1 line-clamp-2 leading-tight" style={{ color: formData.descriptionColor, fontSize: `${formData.descriptionFontSize}px` }}>
+                  <span
+                    className="mt-1 line-clamp-2 leading-tight"
+                    style={{
+                      color: formData.descriptionColor,
+                      fontSize: `${formData.descriptionFontSize}px`,
+                      fontFamily: formData.descriptionFontFamily,
+                      fontWeight: formData.descriptionBold ? 700 : 400,
+                      fontStyle: formData.descriptionItalic ? 'italic' : 'normal',
+                      textDecoration: formData.descriptionUnderline ? 'underline' : 'none',
+                    }}
+                  >
                     {formData.description || 'Your description will appear here'}
                   </span>
                 </div>

@@ -13,6 +13,14 @@ export interface Link {
   descriptionColor?: string;
   titleFontSize?: number;
   descriptionFontSize?: number;
+  titleFontFamily?: string;
+  descriptionFontFamily?: string;
+  titleBold?: boolean;
+  titleItalic?: boolean;
+  titleUnderline?: boolean;
+  descriptionBold?: boolean;
+  descriptionItalic?: boolean;
+  descriptionUnderline?: boolean;
   screenshotUrl?: string;
   color?: string;
   order: number;

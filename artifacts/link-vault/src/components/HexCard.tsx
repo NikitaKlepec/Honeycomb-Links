@@ -76,8 +76,32 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
         
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
-          <h3 className="font-[600] mb-1 line-clamp-1 break-all w-full leading-tight" style={{ color: link.titleColor || '#171717', fontSize: `${link.titleFontSize || 11}px` }}>{link.title}</h3>
-          <p className="line-clamp-2 leading-tight w-full" style={{ color: link.descriptionColor || '#777777', fontSize: `${link.descriptionFontSize || 9}px` }}>{link.description}</p>
+          <h3
+            className="mb-1 line-clamp-1 break-all w-full leading-tight"
+            style={{
+              color: link.titleColor || '#171717',
+              fontSize: `${link.titleFontSize || 11}px`,
+              fontFamily: link.titleFontFamily || 'Inter, sans-serif',
+              fontWeight: link.titleBold === undefined ? 600 : (link.titleBold ? 700 : 400),
+              fontStyle: link.titleItalic ? 'italic' : 'normal',
+              textDecoration: link.titleUnderline ? 'underline' : 'none',
+            }}
+          >
+            {link.title}
+          </h3>
+          <p
+            className="line-clamp-2 leading-tight w-full"
+            style={{
+              color: link.descriptionColor || '#777777',
+              fontSize: `${link.descriptionFontSize || 9}px`,
+              fontFamily: link.descriptionFontFamily || 'Inter, sans-serif',
+              fontWeight: link.descriptionBold ? 700 : 400,
+              fontStyle: link.descriptionItalic ? 'italic' : 'normal',
+              textDecoration: link.descriptionUnderline ? 'underline' : 'none',
+            }}
+          >
+            {link.description}
+          </p>
         </div>
 
         {/* Edit mode badge */}
