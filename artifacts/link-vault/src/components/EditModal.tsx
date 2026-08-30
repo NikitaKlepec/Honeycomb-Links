@@ -26,6 +26,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
     description: '',
     imageUrl: '',
     imagePosition: { x: 50, y: 50 },
+    imageOpacity: 100,
     titleColor: '#171717',
     descriptionColor: '#777777',
     titleFontSize: 11,
@@ -46,6 +47,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           description: initialData.description || '',
           imageUrl: initialData.imageUrl || '',
           imagePosition: initialData.imagePosition || { x: 50, y: 50 },
+          imageOpacity: initialData.imageOpacity ?? 100,
           titleColor: initialData.titleColor || '#171717',
           descriptionColor: initialData.descriptionColor || '#777777',
           titleFontSize: initialData.titleFontSize || 11,
@@ -59,6 +61,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
           description: '',
           imageUrl: '',
           imagePosition: { x: 50, y: 50 },
+          imageOpacity: 100,
           titleColor: '#171717',
           descriptionColor: '#777777',
           titleFontSize: 11,
@@ -294,6 +297,20 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
               className="w-full bg-white/50 neo-shadow-inset rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all border-none"
             />
             <p className="text-[10px] text-muted-foreground/70">The uploaded image or URL overrides the auto-generated favicon.</p>
+            <div className="flex items-center gap-3 pt-1">
+              <span className="min-w-[68px] text-[10px] text-muted-foreground">Opacity</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value={formData.imageOpacity}
+                onChange={(e) => setFormData(prev => ({ ...prev, imageOpacity: Number(e.target.value) }))}
+                className="h-1 flex-1 accent-orange-500"
+                aria-label="Background opacity"
+              />
+              <span className="w-10 text-right text-[10px] text-muted-foreground">{formData.imageOpacity}%</span>
+            </div>
           </div>
 
           <div className="space-y-2 pt-1">
@@ -308,10 +325,11 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
               >
                 {formData.imageUrl ? (
                   <div
-                    className="absolute inset-0 bg-cover bg-center opacity-100"
+                    className="absolute inset-0 bg-cover bg-center"
                     style={{
                       backgroundImage: `url(${formData.imageUrl})`,
                       backgroundPosition: `${formData.imagePosition.x}% ${formData.imagePosition.y}%`,
+                      opacity: formData.imageOpacity / 100,
                     }}
                   />
                 ) : (

@@ -81,6 +81,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
                       backgroundPosition: link.imagePosition
                         ? `${link.imagePosition.x}% ${link.imagePosition.y}%`
                         : '50% 50%',
+                      opacity: (link.imageOpacity ?? 100) / 100,
                     }}
           />
         )}
