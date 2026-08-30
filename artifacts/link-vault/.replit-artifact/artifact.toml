@@ -11,10 +11,10 @@ paths = [ "/" ]
 localPort = 22060
 
 [services.development]
-run = "pnpm --filter @workspace/link-vault run dev"
+run = "corepack pnpm --filter @workspace/link-vault run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/link-vault", "run", "build" ]
+build = [ "corepack", "pnpm", "--filter", "@workspace/link-vault", "run", "build" ]
 serve = "static"
 publicDir = "artifacts/link-vault/dist/public"
 

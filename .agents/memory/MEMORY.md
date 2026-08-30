@@ -1,1 +1,2 @@
 - [Supabase schema setup](supabase-schema-setup.md) — the Replit Supabase connector provides REST access, so DDL must be run separately in Supabase SQL Editor.
+- [Pinned pnpm in Replit workflows](replit-pnpm-pin.md) — keep the root pnpm pin for hosted builds, but use Corepack in managed workflow commands to bypass local auto-provisioning conflicts.
