@@ -21,8 +21,8 @@ import { EditModal } from './EditModal';
 const HEX_WIDTH = 173;
 const HEX_HEIGHT = 150;
 const GAP = 10;
-const X_OFFSET = HEX_WIDTH * 0.75 + GAP;
-const Y_OFFSET = HEX_HEIGHT + GAP;
+const X_OFFSET = HEX_WIDTH + GAP;
+const Y_OFFSET = HEX_HEIGHT * 0.75 + GAP;
 
 export function HoneycombGrid() {
   const { data, isEditMode, updateLink, deleteLink, addLink, reorderLinks } = useVault();
@@ -113,9 +113,9 @@ export function HoneycombGrid() {
       const row = Math.floor(index / cols);
       const col = index % cols;
       
-      const isOddCol = col % 2 !== 0;
-      const x = col * X_OFFSET;
-      const y = row * Y_OFFSET + (isOddCol ? Y_OFFSET / 2 : 0);
+      const isOddRow = row % 2 !== 0;
+      const x = col * X_OFFSET + (isOddRow ? X_OFFSET / 2 : 0);
+      const y = row * Y_OFFSET;
 
       return (
         <div 
@@ -136,9 +136,9 @@ export function HoneycombGrid() {
       const index = links.length;
       const row = Math.floor(index / cols);
       const col = index % cols;
-      const isOddCol = col % 2 !== 0;
-      const x = col * X_OFFSET;
-      const y = row * Y_OFFSET + (isOddCol ? Y_OFFSET / 2 : 0);
+      const isOddRow = row % 2 !== 0;
+      const x = col * X_OFFSET + (isOddRow ? X_OFFSET / 2 : 0);
+      const y = row * Y_OFFSET;
       
       items.push(
         <div key="add-button" style={{ position: 'absolute', left: x, top: y }}>
