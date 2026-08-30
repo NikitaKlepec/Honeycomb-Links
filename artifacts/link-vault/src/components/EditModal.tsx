@@ -16,6 +16,10 @@ const COLORS = [
   '#777777', // Gray
   '#8aa9d1', // Soft blue
   '#f7a875', // Soft orange
+  '#F7444E', // Coral red
+  '#F7F8F3', // Off-white
+  '#78BCC4', // Teal
+  '#002C3E', // Deep navy
   '#ffffff', // White
 ];
 
