@@ -202,10 +202,16 @@ export function HoneycombGrid() {
       </DndContext>
 
       <EditModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveModal}
-        initialData={editingLink}
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      onSave={handleSaveModal}
+      onDelete={editingLink ? () => {
+      if (activeCategory && editingLink) {
+      deleteLink(activeCategory.id, editingLink.id);
+       }
+       setIsModalOpen(false);
+      } : undefined}
+       initialData={editingLink}
       />
     </div>
   );

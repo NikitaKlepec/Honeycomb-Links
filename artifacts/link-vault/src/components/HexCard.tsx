@@ -4,6 +4,16 @@ import { X, Plus, Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface HexCardProps {
   link: any;
@@ -14,6 +24,8 @@ interface HexCardProps {
 }
 
 export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCardProps) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   const {
     attributes,
     listeners,
@@ -45,88 +57,113 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
   };
 
   return (
-    <motion.div
-      ref={setNodeRef}
-      style={style}
-      className={`absolute w-[150px] h-[173px] group ${isEditMode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      {...attributes}
-      {...listeners}
-    >
-      <div 
-        className="w-full h-full relative hex-clip bg-white/70 shadow-sm transition-all duration-300 group-hover:scale-105"
-        onClick={handleClick}
+    <>
+      <motion.div
+        ref={setNodeRef}
+        style={style}
+        className={`absolute w-[150px] h-[173px] group ${isEditMode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}`}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0, opacity: 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        {...attributes}
+        {...listeners}
       >
-        {/* Background image (unblurred, very subtle opacity) */}
-        {backgroundUrl && (
-          <div 
-            className="absolute inset-0 bg-cover bg-center opacity-100 transition-opacity"
-                    style={{
-                      backgroundImage: `url(${backgroundUrl})`,
-                      backgroundPosition: link.imagePosition
-                        ? `${link.imagePosition.x}% ${link.imagePosition.y}%`
-                        : '50% 50%',
-                      opacity: (link.imageOpacity ?? 100) / 100,
-                    }}
-          />
-        )}
-        
-        {/* Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
-          <h3
-            className="mb-1 line-clamp-1 break-all w-full leading-tight"
-            style={{
-              color: link.titleColor || '#171717',
-              fontSize: `${link.titleFontSize || 11}px`,
-              fontFamily: link.titleFontFamily || 'Inter, sans-serif',
-              fontWeight: link.titleBold === undefined ? 600 : (link.titleBold ? 700 : 400),
-              fontStyle: link.titleItalic ? 'italic' : 'normal',
-              textDecoration: link.titleUnderline ? 'underline' : 'none',
-            }}
-          >
-            {link.title}
-          </h3>
-          <p
-            className="line-clamp-2 leading-tight w-full"
-            style={{
-              color: link.descriptionColor || '#777777',
-              fontSize: `${link.descriptionFontSize || 9}px`,
-              fontFamily: link.descriptionFontFamily || 'Inter, sans-serif',
-              fontWeight: link.descriptionBold ? 700 : 400,
-              fontStyle: link.descriptionItalic ? 'italic' : 'normal',
-              textDecoration: link.descriptionUnderline ? 'underline' : 'none',
-            }}
-          >
-            {link.description}
-          </p>
+        <div 
+          className="w-full h-full relative hex-clip bg-white/70 shadow-sm transition-all duration-300 group-hover:scale-105"
+          onClick={handleClick}
+        >
+          {/* Background image (unblurred, very subtle opacity) */}
+          {backgroundUrl && (
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-100 transition-opacity"
+                      style={{
+                        backgroundImage: `url(${backgroundUrl})`,
+                        backgroundPosition: link.imagePosition
+                          ? `${link.imagePosition.x}% ${link.imagePosition.y}%`
+                          : '50% 50%',
+                        opacity: (link.imageOpacity ?? 100) / 100,
+                      }}
+            />
+          )}
+          
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
+            <h3
+              className="mb-1 line-clamp-1 break-all w-full leading-tight"
+              style={{
+                color: link.titleColor || '#171717',
+                fontSize: `${link.titleFontSize || 11}px`,
+                fontFamily: link.titleFontFamily || 'Inter, sans-serif',
+                fontWeight: link.titleBold === undefined ? 600 : (link.titleBold ? 700 : 400),
+                fontStyle: link.titleItalic ? 'italic' : 'normal',
+                textDecoration: link.titleUnderline ? 'underline' : 'none',
+              }}
+            >
+              {link.title}
+            </h3>
+            <p
+              className="line-clamp-2 leading-tight w-full"
+              style={{
+                color: link.descriptionColor || '#777777',
+                fontSize: `${link.descriptionFontSize || 9}px`,
+                fontFamily: link.descriptionFontFamily || 'Inter, sans-serif',
+                fontWeight: link.descriptionBold ? 700 : 400,
+                fontStyle: link.descriptionItalic ? 'italic' : 'normal',
+                textDecoration: link.descriptionUnderline ? 'underline' : 'none',
+              }}
+            >
+              {link.description}
+            </p>
+          </div>
+
+          {/* Edit mode badge */}
+          {isEditMode && (
+            <div className="absolute top-1 right-1 z-30">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setConfirmOpen(true);
+                }}
+                className="p-1.5 bg-destructive/80 backdrop-blur-sm text-white rounded-full hover:bg-destructive active:bg-destructive shadow-sm transition-colors"
+                aria-label="Delete link"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Edit mode badge */}
-        {isEditMode && (
-          <div className="absolute top-1 right-1 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(link.id);
-              }}
-              className="p-1 bg-destructive/60 backdrop-blur-sm text-white rounded-full hover:bg-destructive shadow-sm"
-            >
-              <X className="w-3 h-3" />
-            </button>
+        {/* Tooltip on hover (view mode) */}
+        {!isEditMode && !isDragging && (
+          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap glass-panel text-foreground text-[10px] px-2 py-1 rounded border border-white/60 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-sm">
+            {link.url}
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Tooltip on hover (view mode) */}
-      {!isEditMode && !isDragging && (
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap glass-panel text-foreground text-[10px] px-2 py-1 rounded border border-white/60 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 shadow-sm">
-          {link.url}
-        </div>
-      )}
-    </motion.div>
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this link?</AlertDialogTitle>
+            <AlertDialogDescription>
+              "{link.title}" will be permanently removed from this category. This can't be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                onDelete(link.id);
+                setConfirmOpen(false);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 

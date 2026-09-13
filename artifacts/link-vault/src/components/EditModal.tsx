@@ -1,26 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Globe, Upload, Image as ImageIcon, Bold, Italic, Underline } from 'lucide-react';
 import { Link } from '../store/useLinkVault';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: Partial<Link>) => void;
+  onDelete?: () => void;
   initialData: Link | null;
 }
 
 const COLORS = [
-  '#164f9e', // Blue
-  '#f36f21', // Orange
+  '#9900FF', // Blue
+  '#FF6600', // Orange
   '#171717', // Black
-  '#777777', // Gray
-  '#8aa9d1', // Soft blue
-  '#f7a875', // Soft orange
-  '#F7444E', // Coral red
-  '#F7F8F3', // Off-white
-  '#78BCC4', // Teal
-  '#002C3E', // Deep navy
-  '#ffffff', // White
+  '#FFFF00', // Gray
+  '#FF00CC', // Soft blue
+  '#0033FF', // Soft orange
+  '#FF0000', // Coral red
+  '#336600', // Off-white
+  '#00FF00', // Teal
+  '#009999', // Deep navy
+  '#999900', // White
 ];
 
 const FONT_FAMILIES = [
@@ -101,7 +112,7 @@ function TextStyleControls({
   );
 }
 
-export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalProps) {
+export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: EditModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -125,11 +136,13 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
   });
   const [uploadError, setUploadError] = useState('');
   const [isPositioning, setIsPositioning] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const dragState = useRef<{ clientX: number; clientY: number; x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setUploadError('');
+      setConfirmDeleteOpen(false);
       if (initialData) {
         setFormData({
           title: initialData.title || '',
@@ -531,24 +544,59 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-               className="px-6 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-all glow-accent-subtle hover:glow-accent"
-               style={{ backgroundColor: '#f36f21' }}
-            >
-              Save Link
-            </button>
+          <div className="flex justify-between items-center gap-3 pt-6">
+            <div>
+              {initialData && onDelete && (
+                <button
+                  type="button"
+                  onClick={() => setConfirmDeleteOpen(true)}
+                  className="px-4 py-2 text-sm font-medium text-destructive hover:text-destructive/80 transition-colors"
+                >
+                  Delete Link
+                </button>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                 className="px-6 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 transition-all glow-accent-subtle hover:glow-accent"
+                 style={{ backgroundColor: '#f36f21' }}
+              >
+                Save Link
+              </button>
+            </div>
           </div>
         </form>
       </div>
+
+      <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this link?</AlertDialogTitle>
+            <AlertDialogDescription>
+              "{formData.title || 'This link'}" will be permanently removed. This can't be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setConfirmDeleteOpen(false);
+                onDelete?.();
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
