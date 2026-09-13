@@ -20,18 +20,21 @@ interface EditModalProps {
   initialData: Link | null;
 }
 
+const DEFAULT_TITLE_POSITION = { x: 50, y: 38 };
+const DEFAULT_DESCRIPTION_POSITION = { x: 50, y: 62 };
+
 const COLORS = [
-  '#9900FF', // Blue
-  '#FF6600', // Orange
+  '#164f9e', // Blue
+  '#f36f21', // Orange
   '#171717', // Black
-  '#FFFF00', // Gray
-  '#FF00CC', // Soft blue
-  '#0033FF', // Soft orange
-  '#FF0000', // Coral red
-  '#336600', // Off-white
-  '#00FF00', // Teal
-  '#009999', // Deep navy
-  '#999900', // White
+  '#777777', // Gray
+  '#8aa9d1', // Soft blue
+  '#f7a875', // Soft orange
+  '#F7444E', // Coral red
+  '#F7F8F3', // Off-white
+  '#78BCC4', // Teal
+  '#002C3E', // Deep navy
+  '#ffffff', // White
 ];
 
 const FONT_FAMILIES = [
@@ -42,6 +45,8 @@ const FONT_FAMILIES = [
   { value: '"Trebuchet MS", sans-serif', label: 'Trebuchet MS' },
   { value: 'Menlo, monospace', label: 'Monospace' },
 ];
+
+type PositionField = 'imagePosition' | 'titlePosition' | 'descriptionPosition';
 
 function TextStyleControls({
   fontFamily,
@@ -120,6 +125,8 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     imageUrl: '',
     imagePosition: { x: 50, y: 50 },
     imageOpacity: 100,
+    titlePosition: DEFAULT_TITLE_POSITION,
+    descriptionPosition: DEFAULT_DESCRIPTION_POSITION,
     titleColor: '#171717',
     descriptionColor: '#777777',
     titleFontSize: 11,
@@ -135,9 +142,16 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     color: '#164f9e',
   });
   const [uploadError, setUploadError] = useState('');
-  const [isPositioning, setIsPositioning] = useState(false);
+  const [isPositioning, setIsPositioning] = useState<PositionField | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const dragState = useRef<{ clientX: number; clientY: number; x: number; y: number } | null>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef<{
+    field: PositionField;
+    clientX: number;
+    clientY: number;
+    x: number;
+    y: number;
+  } | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -151,6 +165,8 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
           imageUrl: initialData.imageUrl || '',
           imagePosition: initialData.imagePosition || { x: 50, y: 50 },
           imageOpacity: initialData.imageOpacity ?? 100,
+          titlePosition: initialData.titlePosition || DEFAULT_TITLE_POSITION,
+          descriptionPosition: initialData.descriptionPosition || DEFAULT_DESCRIPTION_POSITION,
           titleColor: initialData.titleColor || '#171717',
           descriptionColor: initialData.descriptionColor || '#777777',
           titleFontSize: initialData.titleFontSize || 11,
@@ -173,6 +189,8 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
           imageUrl: '',
           imagePosition: { x: 50, y: 50 },
           imageOpacity: 100,
+          titlePosition: DEFAULT_TITLE_POSITION,
+          descriptionPosition: DEFAULT_DESCRIPTION_POSITION,
           titleColor: '#171717',
           descriptionColor: '#777777',
           titleFontSize: 11,
@@ -236,32 +254,54 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     reader.readAsDataURL(file);
   };
 
-  const handlePreviewPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!formData.imageUrl) return;
+  const beginDrag = (field: PositionField) => (e: React.PointerEvent<HTMLElement>) => {
+    if (field === 'imagePosition' && !formData.imageUrl) return;
+    e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
+
+    const current =
+      field === 'imagePosition' ? formData.imagePosition :
+      field === 'titlePosition' ? formData.titlePosition :
+      formData.descriptionPosition;
+
     dragState.current = {
+      field,
       clientX: e.clientX,
       clientY: e.clientY,
-      x: formData.imagePosition.x,
-      y: formData.imagePosition.y,
+      x: current.x,
+      y: current.y,
     };
-    setIsPositioning(true);
+    setIsPositioning(field);
   };
 
-  const handlePreviewPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!dragState.current) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const nextX = Math.max(0, Math.min(100, dragState.current.x + ((e.clientX - dragState.current.clientX) / rect.width) * 100));
-    const nextY = Math.max(0, Math.min(100, dragState.current.y + ((e.clientY - dragState.current.clientY) / rect.height) * 100));
-    setFormData(prev => ({ ...prev, imagePosition: { x: nextX, y: nextY } }));
+  const handleDragMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (!dragState.current || !previewRef.current) return;
+    const rect = previewRef.current.getBoundingClientRect();
+    const { field, clientX, clientY, x, y } = dragState.current;
+    const nextX = Math.max(0, Math.min(100, x + ((e.clientX - clientX) / rect.width) * 100));
+    const nextY = Math.max(0, Math.min(100, y + ((e.clientY - clientY) / rect.height) * 100));
+    const nextPosition = { x: nextX, y: nextY };
+
+    setFormData(prev => {
+      switch (field) {
+        case 'imagePosition':
+          return { ...prev, imagePosition: nextPosition };
+        case 'titlePosition':
+          return { ...prev, titlePosition: nextPosition };
+        case 'descriptionPosition':
+          return { ...prev, descriptionPosition: nextPosition };
+        default:
+          return prev;
+      }
+    });
   };
 
-  const handlePreviewPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  const handleDragEnd = (e: React.PointerEvent<HTMLElement>) => {
     if (dragState.current) {
       e.currentTarget.releasePointerCapture(e.pointerId);
     }
     dragState.current = null;
-    setIsPositioning(false);
+    setIsPositioning(null);
   };
 
   return (
@@ -462,15 +502,22 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Background Preview</label>
             <div className="flex min-h-[174px] items-center justify-center rounded-md border border-border/70 bg-[#f5f5f1] p-3">
               <div
-                 className={`relative h-[173px] w-[150px] overflow-hidden hex-clip bg-white shadow-sm ${formData.imageUrl ? (isPositioning ? 'cursor-grabbing' : 'cursor-grab') : ''}`}
-                onPointerDown={handlePreviewPointerDown}
-                onPointerMove={handlePreviewPointerMove}
-                onPointerUp={handlePreviewPointerUp}
-                onPointerCancel={handlePreviewPointerUp}
+                ref={previewRef}
+                className={`relative h-[173px] w-[150px] overflow-hidden hex-clip bg-white shadow-sm select-none ${
+                  isPositioning === 'imagePosition'
+                    ? 'cursor-grabbing'
+                    : formData.imageUrl
+                      ? 'cursor-grab'
+                      : ''
+                }`}
+                onPointerDown={beginDrag('imagePosition')}
+                onPointerMove={handleDragMove}
+                onPointerUp={handleDragEnd}
+                onPointerCancel={handleDragEnd}
               >
                 {formData.imageUrl ? (
                   <div
-                    className="absolute inset-0 bg-cover bg-center"
+                    className="absolute inset-0 bg-cover bg-center pointer-events-none"
                     style={{
                       backgroundImage: `url(${formData.imageUrl})`,
                       backgroundPosition: `${formData.imagePosition.x}% ${formData.imagePosition.y}%`,
@@ -478,51 +525,91 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                     }}
                   />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground">
+                  <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground pointer-events-none">
                     No background selected
                   </div>
                 )}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                  <span
-                    style={{
-                      color: formData.titleColor,
-                      fontSize: `${formData.titleFontSize}px`,
-                      fontFamily: formData.titleFontFamily,
-                      fontWeight: formData.titleBold ? 700 : 400,
-                      fontStyle: formData.titleItalic ? 'italic' : 'normal',
-                      textDecoration: formData.titleUnderline ? 'underline' : 'none',
-                    }}
-                  >
-                    {formData.title || 'Link title'}
-                  </span>
-                  <span
-                    className="mt-1 line-clamp-2 leading-tight"
-                    style={{
-                      color: formData.descriptionColor,
-                      fontSize: `${formData.descriptionFontSize}px`,
-                      fontFamily: formData.descriptionFontFamily,
-                      fontWeight: formData.descriptionBold ? 700 : 400,
-                      fontStyle: formData.descriptionItalic ? 'italic' : 'normal',
-                      textDecoration: formData.descriptionUnderline ? 'underline' : 'none',
-                    }}
-                  >
-                    {formData.description || 'Your description will appear here'}
-                  </span>
+
+                <div
+                  className={`absolute touch-none px-1 text-center ${
+                    isPositioning === 'titlePosition' ? 'cursor-grabbing' : 'cursor-move'
+                  }`}
+                  style={{
+                    left: `${formData.titlePosition.x}%`,
+                    top: `${formData.titlePosition.y}%`,
+                    transform: 'translate(-50%, -50%)',
+                    maxWidth: '70%',
+                    color: formData.titleColor,
+                    fontSize: `${formData.titleFontSize}px`,
+                    fontFamily: formData.titleFontFamily,
+                    fontWeight: formData.titleBold ? 700 : 400,
+                    fontStyle: formData.titleItalic ? 'italic' : 'normal',
+                    textDecoration: formData.titleUnderline ? 'underline' : 'none',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                  }}
+                  onPointerDown={beginDrag('titlePosition')}
+                  onPointerMove={handleDragMove}
+                  onPointerUp={handleDragEnd}
+                  onPointerCancel={handleDragEnd}
+                >
+                  {formData.title || 'Link title'}
+                </div>
+
+                <div
+                  className={`absolute touch-none px-1 text-center ${
+                    isPositioning === 'descriptionPosition' ? 'cursor-grabbing' : 'cursor-move'
+                  }`}
+                  style={{
+                    left: `${formData.descriptionPosition.x}%`,
+                    top: `${formData.descriptionPosition.y}%`,
+                    transform: 'translate(-50%, -50%)',
+                    maxWidth: '72%',
+                    color: formData.descriptionColor,
+                    fontSize: `${formData.descriptionFontSize}px`,
+                    fontFamily: formData.descriptionFontFamily,
+                    fontWeight: formData.descriptionBold ? 700 : 400,
+                    fontStyle: formData.descriptionItalic ? 'italic' : 'normal',
+                    textDecoration: formData.descriptionUnderline ? 'underline' : 'none',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                  }}
+                  onPointerDown={beginDrag('descriptionPosition')}
+                  onPointerMove={handleDragMove}
+                  onPointerUp={handleDragEnd}
+                  onPointerCancel={handleDragEnd}
+                >
+                  {formData.description || 'Your description will appear here'}
                 </div>
               </div>
             </div>
-            {formData.imageUrl && (
-              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                <span>Drag the image to reposition it</span>
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+              <span>Drag Title / Description to reposition them</span>
+              <div className="flex gap-3">
+                {formData.imageUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, imagePosition: { x: 50, y: 50 } }))}
+                    className="text-primary hover:text-orange-600 transition-colors"
+                  >
+                    Center image
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, imagePosition: { x: 50, y: 50 } }))}
+                  onClick={() => setFormData(prev => ({
+                    ...prev,
+                    titlePosition: DEFAULT_TITLE_POSITION,
+                    descriptionPosition: DEFAULT_DESCRIPTION_POSITION,
+                  }))}
                   className="text-primary hover:text-orange-600 transition-colors"
                 >
-                  Center image
+                  Reset text positions
                 </button>
               </div>
-            )}
+            </div>
           </div>
 
           <div className="space-y-2 pt-2">

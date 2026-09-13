@@ -15,6 +15,9 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
+const DEFAULT_TITLE_POSITION = { x: 50, y: 38 };
+const DEFAULT_DESCRIPTION_POSITION = { x: 50, y: 62 };
+
 interface HexCardProps {
   link: any;
   isEditMode: boolean;
@@ -47,6 +50,8 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
 
   const color = link.color || 'rgba(124, 58, 237, 1)';
   const backgroundUrl = link.imageUrl || (link.url ? `https://www.google.com/s2/favicons?domain=${new URL(link.url).hostname}&sz=128` : null);
+  const titlePosition = link.titlePosition || DEFAULT_TITLE_POSITION;
+  const descriptionPosition = link.descriptionPosition || DEFAULT_DESCRIPTION_POSITION;
 
   const handleClick = (e: React.MouseEvent) => {
     if (isEditMode) {
@@ -88,33 +93,47 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
           )}
           
           {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center z-20">
-            <h3
-              className="mb-1 line-clamp-1 break-all w-full leading-tight"
+          <div className="absolute inset-0 z-20 pointer-events-none">
+            <div
+              className="absolute px-1 text-center"
               style={{
+                left: `${titlePosition.x}%`,
+                top: `${titlePosition.y}%`,
+                transform: 'translate(-50%, -50%)',
+                maxWidth: '70%',
                 color: link.titleColor || '#171717',
                 fontSize: `${link.titleFontSize || 11}px`,
                 fontFamily: link.titleFontFamily || 'Inter, sans-serif',
                 fontWeight: link.titleBold === undefined ? 600 : (link.titleBold ? 700 : 400),
                 fontStyle: link.titleItalic ? 'italic' : 'normal',
                 textDecoration: link.titleUnderline ? 'underline' : 'none',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
               }}
             >
               {link.title}
-            </h3>
-            <p
-              className="line-clamp-2 leading-tight w-full"
+            </div>
+            <div
+              className="absolute px-1 text-center"
               style={{
+                left: `${descriptionPosition.x}%`,
+                top: `${descriptionPosition.y}%`,
+                transform: 'translate(-50%, -50%)',
+                maxWidth: '72%',
                 color: link.descriptionColor || '#777777',
                 fontSize: `${link.descriptionFontSize || 9}px`,
                 fontFamily: link.descriptionFontFamily || 'Inter, sans-serif',
                 fontWeight: link.descriptionBold ? 700 : 400,
                 fontStyle: link.descriptionItalic ? 'italic' : 'normal',
                 textDecoration: link.descriptionUnderline ? 'underline' : 'none',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
               }}
             >
               {link.description}
-            </p>
+            </div>
           </div>
 
           {/* Edit mode badge */}

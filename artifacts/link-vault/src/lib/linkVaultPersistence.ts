@@ -33,6 +33,14 @@ function mapLink(row: Record<string, unknown>): Link {
       y: Number(row.image_position_y ?? 50),
     },
     imageOpacity: Number(row.image_opacity ?? 100),
+    titlePosition: {
+      x: Number(row.title_position_x ?? 50),
+      y: Number(row.title_position_y ?? 38),
+    },
+    descriptionPosition: {
+      x: Number(row.description_position_x ?? 50),
+      y: Number(row.description_position_y ?? 62),
+    },
     titleColor: row.title_color ? String(row.title_color) : undefined,
     descriptionColor: row.description_color ? String(row.description_color) : undefined,
     titleFontSize: row.title_font_size == null ? undefined : Number(row.title_font_size),
@@ -59,7 +67,7 @@ export async function loadVaultFromSupabase(): Promise<LinkVaultData> {
       .order('sort_order', { ascending: true }),
     client
       .from('links')
-      .select('id,category_id,title,description,url,image_url,image_position_x,image_position_y,image_opacity,title_color,description_color,title_font_size,description_font_size,title_font_family,description_font_family,title_bold,title_italic,title_underline,description_bold,description_italic,description_underline,color,sort_order')
+      .select('id,category_id,title,description,url,image_url,image_position_x,image_position_y,image_opacity,title_position_x,title_position_y,description_position_x,description_position_y,title_color,description_color,title_font_size,description_font_size,title_font_family,description_font_family,title_bold,title_italic,title_underline,description_bold,description_italic,description_underline,color,sort_order')
       .order('sort_order', { ascending: true }),
   ]);
 
@@ -107,6 +115,10 @@ function linkRow(categoryId: string, link: Link, index: number) {
     image_position_x: link.imagePosition?.x ?? 50,
     image_position_y: link.imagePosition?.y ?? 50,
     image_opacity: link.imageOpacity ?? 100,
+    title_position_x: link.titlePosition?.x ?? 50,
+    title_position_y: link.titlePosition?.y ?? 38,
+    description_position_x: link.descriptionPosition?.x ?? 50,
+    description_position_y: link.descriptionPosition?.y ?? 62,
     title_color: link.titleColor ?? null,
     description_color: link.descriptionColor ?? null,
     title_font_size: link.titleFontSize ?? null,
