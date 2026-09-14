@@ -4,6 +4,7 @@ import { X, Plus, Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { hexTextMaxWidthPx } from '@/lib/hexTextLayout';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -100,7 +101,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
                 left: `${titlePosition.x}%`,
                 top: `${titlePosition.y}%`,
                 transform: 'translate(-50%, -50%)',
-                maxWidth: '70%',
+                maxWidth: `${hexTextMaxWidthPx(titlePosition.x, titlePosition.y)}px`,
                 color: link.titleColor || '#171717',
                 fontSize: `${link.titleFontSize || 11}px`,
                 fontFamily: link.titleFontFamily || 'Inter, sans-serif',
@@ -108,7 +109,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
                 fontStyle: link.titleItalic ? 'italic' : 'normal',
                 textDecoration: link.titleUnderline ? 'underline' : 'none',
                 whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
+                wordBreak: 'normal',
                 overflowWrap: 'break-word',
               }}
             >
@@ -120,7 +121,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
                 left: `${descriptionPosition.x}%`,
                 top: `${descriptionPosition.y}%`,
                 transform: 'translate(-50%, -50%)',
-                maxWidth: '72%',
+                maxWidth: `${hexTextMaxWidthPx(descriptionPosition.x, descriptionPosition.y)}px`,
                 color: link.descriptionColor || '#777777',
                 fontSize: `${link.descriptionFontSize || 9}px`,
                 fontFamily: link.descriptionFontFamily || 'Inter, sans-serif',
@@ -128,7 +129,7 @@ export function HexCard({ link, isEditMode, onEdit, onDelete, isOverlay }: HexCa
                 fontStyle: link.descriptionItalic ? 'italic' : 'normal',
                 textDecoration: link.descriptionUnderline ? 'underline' : 'none',
                 whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
+                wordBreak: 'normal',
                 overflowWrap: 'break-word',
               }}
             >
