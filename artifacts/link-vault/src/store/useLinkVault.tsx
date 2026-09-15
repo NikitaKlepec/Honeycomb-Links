@@ -11,6 +11,8 @@ export interface Link {
   imageUrl?: string;
   imagePosition?: { x: number; y: number };
   imageOpacity?: number;
+  titlePosition?: { x: number; y: number };
+  descriptionPosition?: { x: number; y: number };
   titleColor?: string;
   descriptionColor?: string;
   titleFontSize?: number;
@@ -202,6 +204,20 @@ export function useLinkVaultHook() {
     });
   }, []);
 
+  const reorderCategories = useCallback((activeId: string, overId: string) => {
+    setData((prev) => {
+      const oldIndex = prev.categories.findIndex((category) => category.id === activeId);
+      const newIndex = prev.categories.findIndex((category) => category.id === overId);
+      if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return prev;
+
+      const categories = [...prev.categories];
+      const [movedCategory] = categories.splice(oldIndex, 1);
+      categories.splice(newIndex, 0, movedCategory);
+
+      return { ...prev, categories };
+    });
+  }, []);
+
   // Link Actions
   const addLink = useCallback((categoryId: string, link: Omit<Link, 'id' | 'order'>) => {
     setData((prev) => {
@@ -286,6 +302,7 @@ export function useLinkVaultHook() {
     addCategory,
     updateCategory,
     deleteCategory,
+    reorderCategories,
     addLink,
     updateLink,
     deleteLink,
