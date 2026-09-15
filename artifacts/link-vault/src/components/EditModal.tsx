@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Globe, Upload, Image as ImageIcon, Bold, Italic, Underline } from 'lucide-react';
 import { Link } from '../store/useLinkVault';
+import { hexTextHorizontalBoundsPercent, hexTextMaxWidthPx } from '@/lib/hexTextLayout';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -151,6 +152,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     clientY: number;
     x: number;
     y: number;
+    element: HTMLElement;
   } | null>(null);
 
   useEffect(() => {
@@ -270,6 +272,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
       clientY: e.clientY,
       x: current.x,
       y: current.y,
+      element: e.currentTarget,
     };
     setIsPositioning(field);
   };
@@ -278,8 +281,18 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     if (!dragState.current || !previewRef.current) return;
     const rect = previewRef.current.getBoundingClientRect();
     const { field, clientX, clientY, x, y } = dragState.current;
-    const nextX = Math.max(0, Math.min(100, x + ((e.clientX - clientX) / rect.width) * 100));
     const nextY = Math.max(0, Math.min(100, y + ((e.clientY - clientY) / rect.height) * 100));
+    let nextX = Math.max(0, Math.min(100, x + ((e.clientX - clientX) / rect.width) * 100));
+
+    if (field !== 'imagePosition') {
+      const bounds = hexTextHorizontalBoundsPercent(
+        nextY,
+        dragState.current.element.offsetWidth,
+        rect.width,
+      );
+      nextX = Math.max(bounds.min, Math.min(bounds.max, nextX));
+    }
+
     const nextPosition = { x: nextX, y: nextY };
 
     setFormData(prev => {
@@ -538,7 +551,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                     left: `${formData.titlePosition.x}%`,
                     top: `${formData.titlePosition.y}%`,
                     transform: 'translate(-50%, -50%)',
-                    maxWidth: '70%',
+                    maxWidth: `${hexTextMaxWidthPx(formData.titlePosition.y)}px`,
                     color: formData.titleColor,
                     fontSize: `${formData.titleFontSize}px`,
                     fontFamily: formData.titleFontFamily,
@@ -546,7 +559,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                     fontStyle: formData.titleItalic ? 'italic' : 'normal',
                     textDecoration: formData.titleUnderline ? 'underline' : 'none',
                     whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word',
+                    wordBreak: 'normal',
                     overflowWrap: 'break-word',
                   }}
                   onPointerDown={beginDrag('titlePosition')}
@@ -565,7 +578,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                     left: `${formData.descriptionPosition.x}%`,
                     top: `${formData.descriptionPosition.y}%`,
                     transform: 'translate(-50%, -50%)',
-                    maxWidth: '72%',
+                    maxWidth: `${hexTextMaxWidthPx(formData.descriptionPosition.y)}px`,
                     color: formData.descriptionColor,
                     fontSize: `${formData.descriptionFontSize}px`,
                     fontFamily: formData.descriptionFontFamily,
@@ -573,7 +586,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                     fontStyle: formData.descriptionItalic ? 'italic' : 'normal',
                     textDecoration: formData.descriptionUnderline ? 'underline' : 'none',
                     whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word',
+                    wordBreak: 'normal',
                     overflowWrap: 'break-word',
                   }}
                   onPointerDown={beginDrag('descriptionPosition')}
