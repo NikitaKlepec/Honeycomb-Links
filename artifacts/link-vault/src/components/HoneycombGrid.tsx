@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useVault, Link } from '../store/useLinkVault';
 import { HexCard, AddHexCard } from './HexCard';
-import { ExternalLink } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -174,18 +173,14 @@ export function HoneycombGrid() {
 
   return (
     <div className="relative w-full h-full px-8 pt-20 pb-8 md:px-12 md:pt-20 md:pb-12 overflow-auto vault-scrollbar" id="grid-container">
-      <div className="absolute top-4 left-8 right-36 z-30 flex min-w-0 items-center gap-4 md:left-12 md:right-48">
-        <h1 className="min-w-0 truncate text-[2rem] font-[300] leading-none tracking-wide text-foreground">
-          {activeCategory.name}
-        </h1>
+      <div className="absolute top-4 left-8 z-30 md:left-12">
         <button
           type="button"
           onClick={handleOpenAll}
           disabled={links.length === 0}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-primary/30 bg-white/70 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center rounded-md border border-primary/30 bg-white/70 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Open All
+          {activeCategory.name}
         </button>
       </div>
 
