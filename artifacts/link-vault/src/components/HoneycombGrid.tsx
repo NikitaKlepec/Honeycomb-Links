@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useVault, Link } from '../store/useLinkVault';
 import { HexCard, AddHexCard } from './HexCard';
+import { ExternalLink } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -79,6 +80,15 @@ export function HoneycombGrid() {
     if (activeCategory) {
       deleteLink(activeCategory.id, linkId);
     }
+  };
+
+  const handleOpenAll = () => {
+    links.forEach((link) => {
+      const url = link.url.trim();
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    });
   };
 
   const handleSaveModal = (linkData: Partial<Link>) => {
@@ -165,6 +175,15 @@ export function HoneycombGrid() {
   return (
     <div className="w-full h-full p-8 md:p-12 overflow-auto vault-scrollbar" id="grid-container">
       <div className="mb-8">
+        <button
+          type="button"
+          onClick={handleOpenAll}
+          disabled={links.length === 0}
+          className="mb-2 inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-white/70 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          Open All
+        </button>
         <h1 className="text-[2rem] font-[300] tracking-wide text-foreground mb-2">
           {activeCategory.name}
         </h1>
