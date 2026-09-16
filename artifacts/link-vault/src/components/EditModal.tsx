@@ -24,6 +24,21 @@ interface EditModalProps {
 const DEFAULT_TITLE_POSITION = { x: 50, y: 38 };
 const DEFAULT_DESCRIPTION_POSITION = { x: 50, y: 62 };
 
+function getFaviconUrl(url: string) {
+  const value = url.trim();
+  if (!value) return null;
+
+  try {
+    const normalizedUrl = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+    const hostname = new URL(normalizedUrl).hostname;
+    return hostname
+      ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=128`
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 const COLORS = [
   '#9900CC',
   '#0000FF',
@@ -212,6 +227,8 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
   }, [isOpen, initialData]);
 
   if (!isOpen) return null;
+
+  const previewBackgroundUrl = formData.imageUrl || getFaviconUrl(formData.url);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -527,11 +544,11 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                 onPointerUp={handleDragEnd}
                 onPointerCancel={handleDragEnd}
               >
-                {formData.imageUrl ? (
+                {previewBackgroundUrl ? (
                   <div
                     className="absolute inset-0 bg-cover bg-center pointer-events-none"
                     style={{
-                      backgroundImage: `url(${formData.imageUrl})`,
+                      backgroundImage: `url(${previewBackgroundUrl})`,
                       backgroundPosition: `${formData.imagePosition.x}% ${formData.imagePosition.y}%`,
                       opacity: formData.imageOpacity / 100,
                     }}
