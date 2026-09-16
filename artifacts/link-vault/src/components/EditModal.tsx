@@ -347,12 +347,12 @@ export function EditModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-white/20 p-4 backdrop-blur-sm md:items-center">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-white/20 p-2 backdrop-blur-sm md:items-center">
       <div 
         className="flex max-h-[calc(100dvh-2rem)] w-full max-w-md flex-col overflow-hidden rounded-lg glass-panel-strong neo-shadow animate-in fade-in zoom-in-95 duration-200"
          style={{ boxShadow: `0 0 24px ${formData.color}18, inset 0 0 0 1px ${formData.color}35, 6px 6px 16px rgba(23,23,23,0.08), -4px -4px 12px rgba(255,255,255,0.9)` }}
       >
-        <div className="px-6 py-4 border-b border-white/60 flex items-center justify-between">
+        <div className="px-4 py-3 border-b border-white/60 flex items-center justify-between">
           <h2 className="text-lg font-[300] tracking-wide text-foreground flex items-center gap-2">
             <Globe className="w-5 h-5" style={{ color: formData.color }} />
             {initialData ? 'Edit Link' : 'Add Link'}
@@ -365,9 +365,10 @@ export function EditModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-scroll-left min-h-0 space-y-4 p-6">
+        <form onSubmit={handleSubmit} className="modal-scroll-left min-h-0 space-y-3 p-4">
           <div className="space-y-2">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">URL *</label>
+            <div className="flex items-center gap-3">
+              <label className="min-w-[68px] text-[10px] font-medium uppercase tracking-wider text-muted-foreground">URL *</label>
             <input
               type="url"
               required
@@ -375,19 +376,22 @@ export function EditModal({
               onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               onBlur={handleUrlBlur}
               placeholder="https://example.com"
-              className="w-full bg-white/50 neo-shadow-inset rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all border-none"
+              className="min-w-0 flex-1 rounded-md border-none bg-white/50 px-3 py-1.5 text-sm text-foreground neo-shadow-inset transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
+            </div>
           </div>
 
           <div className="space-y-2">
-             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title</label>
-            <input
-              type="text"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="My Awesome Site"
-              className="w-full bg-white/50 neo-shadow-inset rounded-md px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all border-none"
-            />
+             <div className="flex items-center gap-3">
+               <label className="min-w-[68px] text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Title</label>
+               <input
+                 type="text"
+                 value={formData.title}
+                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                 placeholder="My Awesome Site"
+                 className="min-w-0 flex-1 rounded-md border-none bg-white/50 px-3 py-1.5 text-sm text-foreground neo-shadow-inset transition-all focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+               />
+             </div>
            <div className="flex items-center justify-between gap-3 pt-1">
              <span className="text-[10px] text-muted-foreground">Title color</span>
              <div className="flex flex-wrap justify-end gap-2">
@@ -693,7 +697,7 @@ export function EditModal({
             </div>
           )}
 
-          <div className="flex justify-between items-center gap-3 pt-6">
+          <div className="flex justify-between items-center gap-3 pt-4">
             <div>
               {initialData && onDelete && (
                 <button
