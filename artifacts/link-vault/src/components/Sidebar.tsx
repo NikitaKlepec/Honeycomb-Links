@@ -4,6 +4,7 @@ import {
   FolderPlus, 
   Trash2, 
   Edit2, 
+  Upload,
 } from 'lucide-react';
 import * as Icons from 'lucide-react';
 import {
@@ -22,8 +23,82 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 const ICON_OPTIONS = [
-  'Terminal', 'PenTool', 'Book', 'Heart', 'Globe', 'Settings', 'ImageIcon', 'Briefcase', 'Coffee', 'Monitor', 'Cpu', 'Database'
+  'Terminal', 'PenTool', 'Book', 'Heart', 'Globe', 'Settings', 'ImageIcon', 'Briefcase', 'Coffee', 'Monitor', 'Cpu', 'Database',
+  'Folder', 'Home', 'Star', 'Bookmark', 'Tag', 'Link', 'Code2', 'Palette', 'Music', 'Film', 'Camera',
+  'Gamepad2', 'ShoppingBag', 'GraduationCap', 'Wrench', 'Lightbulb', 'Rocket', 'Shield', 'Cloud', 'Mail',
+  'Calendar', 'Map', 'Newspaper', 'Users', 'Bot', 'Zap', 'Server', 'GitBranch',
 ];
+
+const MAX_ICON_FILE_SIZE = 2 * 1024 * 1024;
+
+function isUploadedIcon(iconName: string) {
+  return iconName.startsWith('data:image/');
+}
+
+function CategoryIcon({ iconName, className }: { iconName: string; className: string }) {
+  if (isUploadedIcon(iconName)) {
+    return <img src={iconName} alt="" className={`${className} rounded object-cover`} />;
+  }
+
+  const Icon = (Icons as any)[iconName] || Icons.Folder;
+  return <Icon className={className} />;
+}
+
+function IconPicker({
+  value,
+  onChange,
+  onUpload,
+  uploadError,
+}: {
+  value: string;
+  onChange: (icon: string) => void;
+  onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  uploadError: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex max-h-36 flex-wrap gap-2 overflow-y-auto pr-1">
+        {ICON_OPTIONS.map((icon) => (
+          <button
+            key={icon}
+            type="button"
+            onClick={() => onChange(icon)}
+            aria-label={`Select ${icon} icon`}
+            className={`rounded-md border p-1.5 ${
+              value === icon
+                ? 'border-primary bg-primary/10 text-primary'
+                : 'border-border/50 text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <CategoryIcon iconName={icon} className="h-4 w-4" />
+          </button>
+        ))}
+        {isUploadedIcon(value) && (
+          <button
+            type="button"
+            onClick={() => onChange(value)}
+            aria-label="Use uploaded icon"
+            title="Uploaded icon"
+            className="rounded-md border border-primary bg-primary/10 p-1.5 text-primary"
+          >
+            <CategoryIcon iconName={value} className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+      <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-dashed border-primary/40 px-2 py-1.5 text-xs text-primary transition-colors hover:border-primary hover:bg-primary/5">
+        <Upload className="h-3.5 w-3.5" />
+        Upload icon
+        <input
+          type="file"
+          accept="image/*"
+          onChange={onUpload}
+          className="sr-only"
+        />
+      </label>
+      {uploadError && <p className="text-[10px] text-destructive">{uploadError}</p>}
+    </div>
+  );
+}
 
 interface SortableCategoryProps {
   cat: Category;
@@ -32,10 +107,12 @@ interface SortableCategoryProps {
   isEditing: boolean;
   newName: string;
   newIcon: string;
+  iconUploadError: string;
   canDelete: boolean;
   onSelect: () => void;
   onNameChange: (value: string) => void;
   onIconChange: (icon: string) => void;
+  onIconUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onCancelEdit: () => void;
   onSaveEdit: () => void;
   onStartEdit: () => void;
@@ -49,10 +126,12 @@ function SortableCategory({
   isEditing,
   newName,
   newIcon,
+  iconUploadError,
   canDelete,
   onSelect,
   onNameChange,
   onIconChange,
+  onIconUpload,
   onCancelEdit,
   onSaveEdit,
   onStartEdit,
@@ -78,11 +157,6 @@ function SortableCategory({
     zIndex: isDragging ? 10 : 1,
   };
 
-  const renderIcon = (iconName: string) => {
-    const Icon = (Icons as any)[iconName] || Icons.Folder;
-    return <Icon className="w-5 h-5" />;
-  };
-
   return (
     <div ref={setNodeRef} style={style} className="flex-shrink-0 md:flex-shrink">
       {isEditing ? (
@@ -94,20 +168,12 @@ function SortableCategory({
             className="w-full bg-white/50 border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:border-primary"
             autoFocus
           />
-          <div className="flex flex-wrap gap-2">
-            {ICON_OPTIONS.map((icon) => {
-              const IconComp = (Icons as any)[icon] || Icons.Folder;
-              return (
-                <button
-                  key={icon}
-                  onClick={() => onIconChange(icon)}
-                  className={`p-1.5 rounded-md border ${newIcon === icon ? 'border-primary bg-primary/10 text-primary' : 'border-border/50 text-muted-foreground hover:text-foreground'}`}
-                >
-                  <IconComp className="w-4 h-4" />
-                </button>
-              );
-            })}
-          </div>
+          <IconPicker
+            value={newIcon}
+            onChange={onIconChange}
+            onUpload={onIconUpload}
+            uploadError={iconUploadError}
+          />
           <div className="flex justify-end gap-2 mt-2">
             <button onClick={onCancelEdit} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
             <button onClick={onSaveEdit} className="text-xs text-primary font-medium hover:text-primary/80">Save</button>
@@ -127,7 +193,7 @@ function SortableCategory({
               title={isEditMode ? 'Drag to reorder' : undefined}
               className={`${isActive ? 'text-white' : 'text-muted-foreground group-hover:text-orange-600'} transition-colors flex-shrink-0 ${isEditMode ? 'cursor-grab active:cursor-grabbing touch-none rounded-md p-0.5 hover:bg-primary/10' : ''}`}
             >
-              {renderIcon(cat.icon)}
+              <CategoryIcon iconName={cat.icon} className="h-5 w-5" />
             </span>
             <span className="font-medium text-sm truncate">{cat.name}</span>
           </div>
@@ -168,6 +234,7 @@ export function Sidebar() {
   
   const [newName, setNewName] = useState('');
   const [newIcon, setNewIcon] = useState('Folder');
+  const [iconUploadError, setIconUploadError] = useState('');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -182,6 +249,7 @@ export function Sidebar() {
       addCategory(newName.trim(), newIcon);
       setNewName('');
       setNewIcon('Folder');
+      setIconUploadError('');
       setIsAdding(false);
     }
   };
@@ -192,6 +260,7 @@ export function Sidebar() {
       setEditingId(null);
       setNewName('');
       setNewIcon('Folder');
+      setIconUploadError('');
     }
   };
 
@@ -199,6 +268,33 @@ export function Sidebar() {
     setEditingId(cat.id);
     setNewName(cat.name);
     setNewIcon(cat.icon);
+    setIconUploadError('');
+  };
+
+  const handleIconUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setIconUploadError('Please choose an image file.');
+      return;
+    }
+
+    if (file.size > MAX_ICON_FILE_SIZE) {
+      setIconUploadError('Icon must be smaller than 2 MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setNewIcon(reader.result);
+        setIconUploadError('');
+      }
+    };
+    reader.onerror = () => setIconUploadError('Could not read this image.');
+    reader.readAsDataURL(file);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -238,11 +334,16 @@ export function Sidebar() {
                 isEditing={editingId === cat.id}
                 newName={newName}
                 newIcon={newIcon}
+                iconUploadError={iconUploadError}
                 canDelete={data.categories.length > 1}
                 onSelect={() => setActiveCategory(cat.id)}
                 onNameChange={setNewName}
                 onIconChange={setNewIcon}
-                onCancelEdit={() => setEditingId(null)}
+                onIconUpload={handleIconUpload}
+                onCancelEdit={() => {
+                  setEditingId(null);
+                  setIconUploadError('');
+                }}
                 onSaveEdit={() => handleUpdate(cat.id)}
                 onStartEdit={() => startEdit(cat)}
                 onDelete={() => deleteCategory(cat.id)}
@@ -256,6 +357,7 @@ export function Sidebar() {
                 setIsAdding(true);
                 setNewName('');
                 setNewIcon('Folder');
+                setIconUploadError('');
               }}
               className="w-full mt-4 flex items-center gap-2 p-3 text-sm text-muted-foreground hover:text-orange-600 border border-dashed border-primary/40 hover:border-orange-500 hover:glow-accent-subtle rounded-md transition-all"
             >
@@ -274,22 +376,22 @@ export function Sidebar() {
                 className="w-full bg-white/50 border border-border rounded px-2 py-1 text-sm text-foreground focus:outline-none focus:border-primary"
                 autoFocus
               />
-              <div className="flex flex-wrap gap-2">
-                {ICON_OPTIONS.map((icon) => {
-                  const IconComp = (Icons as any)[icon] || Icons.Folder;
-                  return (
-                    <button
-                      key={icon}
-                      onClick={() => setNewIcon(icon)}
-                      className={`p-1.5 rounded-md border ${newIcon === icon ? 'border-primary bg-primary/10 text-primary' : 'border-border/50 text-muted-foreground hover:text-foreground'}`}
-                    >
-                      <IconComp className="w-4 h-4" />
-                    </button>
-                  )
-                })}
-              </div>
+              <IconPicker
+                value={newIcon}
+                onChange={setNewIcon}
+                onUpload={handleIconUpload}
+                uploadError={iconUploadError}
+              />
               <div className="flex justify-end gap-2 mt-2">
-                <button onClick={() => setIsAdding(false)} className="text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                <button
+                  onClick={() => {
+                    setIsAdding(false);
+                    setIconUploadError('');
+                  }}
+                  className="text-xs text-muted-foreground hover:text-foreground"
+                >
+                  Cancel
+                </button>
                 <button onClick={handleAdd} className="text-xs text-primary font-medium hover:text-primary/80">Add</button>
               </div>
             </div>
