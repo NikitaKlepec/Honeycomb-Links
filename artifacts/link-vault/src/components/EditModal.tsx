@@ -536,11 +536,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                       opacity: formData.imageOpacity / 100,
                     }}
                   />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground pointer-events-none">
-                    No background selected
-                  </div>
-                )}
+                ) : null}
 
                 <div
                   className={`absolute touch-none px-1 text-center ${
@@ -595,7 +591,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
                   onPointerUp={handleDragEnd}
                   onPointerCancel={handleDragEnd}
                 >
-                  {formData.description || 'Your description will appear here'}
+                  {formData.description}
                 </div>
               </div>
             </div>
