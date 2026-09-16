@@ -25,7 +25,7 @@ const X_OFFSET = HEX_WIDTH + GAP;
 const Y_OFFSET = HEX_HEIGHT * 0.75 + GAP;
 
 export function HoneycombGrid() {
-  const { data, isEditMode, updateLink, deleteLink, addLink, reorderLinks } = useVault();
+  const { data, isEditMode, updateLink, moveLink, deleteLink, addLink, reorderLinks } = useVault();
   
   const activeCategory = data.categories.find(c => c.id === data.activeCategory);
   const links = activeCategory ? activeCategory.links.sort((a, b) => a.order - b.order) : [];
@@ -90,10 +90,14 @@ export function HoneycombGrid() {
     });
   };
 
-  const handleSaveModal = (linkData: Partial<Link>) => {
+  const handleSaveModal = (linkData: Partial<Link>, targetCategoryId: string) => {
     if (activeCategory) {
       if (editingLink) {
-        updateLink(activeCategory.id, editingLink.id, linkData);
+        if (targetCategoryId !== activeCategory.id) {
+          moveLink(activeCategory.id, targetCategoryId, editingLink.id, linkData);
+        } else {
+          updateLink(activeCategory.id, editingLink.id, linkData);
+        }
       } else {
         addLink(activeCategory.id, linkData as Omit<Link, 'id' | 'order'>);
       }
@@ -226,6 +230,8 @@ export function HoneycombGrid() {
        setIsModalOpen(false);
       } : undefined}
        initialData={editingLink}
+       categories={data.categories}
+       initialCategoryId={activeCategory.id}
       />
     </div>
   );

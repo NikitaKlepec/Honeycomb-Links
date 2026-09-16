@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Globe, Upload, Image as ImageIcon, Bold, Italic, Underline } from 'lucide-react';
-import { Link } from '../store/useLinkVault';
+import { Category, Link } from '../store/useLinkVault';
 import { hexTextHorizontalBoundsPercent, hexTextMaxWidthPx } from '@/lib/hexTextLayout';
 import {
   AlertDialog,
@@ -16,9 +16,11 @@ import {
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (data: Partial<Link>) => void;
+  onSave: (data: Partial<Link>, targetCategoryId: string) => void;
   onDelete?: () => void;
   initialData: Link | null;
+  categories: Category[];
+  initialCategoryId: string;
 }
 
 const DEFAULT_TITLE_POSITION = { x: 50, y: 38 };
@@ -133,7 +135,15 @@ function TextStyleControls({
   );
 }
 
-export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: EditModalProps) {
+export function EditModal({
+  isOpen,
+  onClose,
+  onSave,
+  onDelete,
+  initialData,
+  categories,
+  initialCategoryId,
+}: EditModalProps) {
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -157,6 +167,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     descriptionUnderline: false,
     color: '#9900CC',
   });
+  const [targetCategoryId, setTargetCategoryId] = useState(initialCategoryId);
   const [uploadError, setUploadError] = useState('');
   const [isPositioning, setIsPositioning] = useState<PositionField | null>(null);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -174,6 +185,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     if (isOpen) {
       setUploadError('');
       setConfirmDeleteOpen(false);
+      setTargetCategoryId(initialCategoryId);
       if (initialData) {
         setFormData({
           title: initialData.title || '',
@@ -224,7 +236,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
         });
       }
     }
-  }, [isOpen, initialData]);
+  }, [isOpen, initialData, initialCategoryId]);
 
   if (!isOpen) return null;
 
@@ -232,7 +244,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave(formData, targetCategoryId);
   };
 
   const handleUrlBlur = () => {
@@ -657,6 +669,29 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
               ))}
             </div>
           </div>
+
+          {initialData && categories.length > 1 && (
+            <div className="space-y-2 pt-2">
+              <label
+                htmlFor="target-category"
+                className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground"
+              >
+                Move to group
+              </label>
+              <select
+                id="target-category"
+                value={targetCategoryId}
+                onChange={(e) => setTargetCategoryId(e.target.value)}
+                className="w-full rounded-md border-none bg-white/50 px-3 py-2 text-sm text-foreground neo-shadow-inset focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="flex justify-between items-center gap-3 pt-6">
             <div>

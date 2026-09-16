@@ -253,6 +253,42 @@ export function useLinkVaultHook() {
     });
   }, []);
 
+  const moveLink = useCallback((
+    sourceCategoryId: string,
+    targetCategoryId: string,
+    linkId: string,
+    updates: Partial<Omit<Link, 'id' | 'order'>>,
+  ) => {
+    setData((prev) => {
+      if (sourceCategoryId === targetCategoryId) return prev;
+
+      const sourceCategory = prev.categories.find((category) => category.id === sourceCategoryId);
+      const targetCategory = prev.categories.find((category) => category.id === targetCategoryId);
+      const movingLink = sourceCategory?.links.find((link) => link.id === linkId);
+
+      if (!sourceCategory || !targetCategory || !movingLink) return prev;
+
+      const updatedLink = {
+        ...movingLink,
+        ...updates,
+        order: targetCategory.links.length,
+      };
+      const sourceLinks = sourceCategory.links
+        .filter((link) => link.id !== linkId)
+        .map((link, index) => ({ ...link, order: index }));
+      const targetLinks = [...targetCategory.links, updatedLink];
+
+      return {
+        ...prev,
+        categories: prev.categories.map((category) => {
+          if (category.id === sourceCategoryId) return { ...category, links: sourceLinks };
+          if (category.id === targetCategoryId) return { ...category, links: targetLinks };
+          return category;
+        }),
+      };
+    });
+  }, []);
+
   const deleteLink = useCallback((categoryId: string, linkId: string) => {
     setData((prev) => {
       return {
@@ -305,6 +341,7 @@ export function useLinkVaultHook() {
     reorderCategories,
     addLink,
     updateLink,
+    moveLink,
     deleteLink,
     reorderLinks,
   };
