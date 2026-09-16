@@ -178,7 +178,7 @@ export function HoneycombGrid() {
           type="button"
           onClick={handleOpenAll}
           disabled={links.length === 0}
-          className="inline-flex items-center rounded-md border border-primary/30 bg-white/70 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center rounded-md border border-primary/30 bg-white/70 px-3 py-1.5 text-[1.05rem] font-medium text-primary transition-colors hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {activeCategory.name}
         </button>

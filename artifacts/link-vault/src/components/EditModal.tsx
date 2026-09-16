@@ -25,16 +25,16 @@ const DEFAULT_TITLE_POSITION = { x: 50, y: 38 };
 const DEFAULT_DESCRIPTION_POSITION = { x: 50, y: 62 };
 
 const COLORS = [
-  '#164f9e', // Blue
-  '#f36f21', // Orange
-  '#171717', // Black
-  '#777777', // Gray
-  '#8aa9d1', // Soft blue
-  '#f7a875', // Soft orange
-  '#F7444E', // Coral red
-  '#F7F8F3', // Off-white
-  '#78BCC4', // Teal
-  '#002C3E', // Deep navy
+  '#9900CC',
+  '#0000FF',
+  '#006600',
+  '#FFFF00',
+  '#171717',
+  '#FF0000',
+  '#33FF00',
+  '#FF00CC',
+  '#006666',
+  '#FA8072',
   '#ffffff', // White
 ];
 
@@ -140,7 +140,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
     descriptionBold: false,
     descriptionItalic: false,
     descriptionUnderline: false,
-    color: '#164f9e',
+    color: '#9900CC',
   });
   const [uploadError, setUploadError] = useState('');
   const [isPositioning, setIsPositioning] = useState<PositionField | null>(null);
@@ -181,7 +181,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
           descriptionBold: initialData.descriptionBold ?? false,
           descriptionItalic: initialData.descriptionItalic ?? false,
           descriptionUnderline: initialData.descriptionUnderline ?? false,
-           color: initialData.color || '#164f9e',
+           color: initialData.color || '#9900CC',
         });
       } else {
         setFormData({
@@ -205,7 +205,7 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
           descriptionBold: false,
           descriptionItalic: false,
           descriptionUnderline: false,
-           color: '#164f9e',
+            color: '#9900CC',
         });
       }
     }
@@ -351,10 +351,9 @@ export function EditModal({ isOpen, onClose, onSave, onDelete, initialData }: Ed
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title *</label>
+             <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Title</label>
             <input
               type="text"
-              required
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="My Awesome Site"
